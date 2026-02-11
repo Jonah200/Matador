@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Matador",
+  "version": "1.0",
+  "permissions": ["sidePanel"],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "action": {
+    "default_title": "Click to open panel"
+  }
+}
