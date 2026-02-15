@@ -7,3 +7,8 @@ __pycache__/
 # Node
 **/node_modules
 dist/
+
+# System Specific
+.DS_Store
+.vscode/
+.idea
