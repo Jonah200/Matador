@@ -6,6 +6,7 @@ import json
 import time
 
 from app.services.sample_service import run_fake_analysis
+from app.DTO.Article import Article
 
 router = APIRouter()
 
@@ -22,18 +23,18 @@ async def cleanup_jobs(ttl=300):
         await asyncio.sleep(60)
 
 @router.post("/analyze")
-async def analyze():
+async def analyze(article: Article):
     job_id = str(uuid.uuid4())
 
     queue = asyncio.Queue()
 
     jobs[job_id] = {
         "queue": queue,
-        "complete": False,
+        "complete": False, # As of now this field is unnecessary, but it may be useful in the future
         "created": time.time()
     }
 
-    asyncio.create_task(run_fake_analysis(job_id, queue))
+    asyncio.create_task(run_fake_analysis(job_id, queue, article))
 
     return {"job_id" : job_id}
 
@@ -55,7 +56,7 @@ async def stream_job(job_id: str):
                     break
             
         finally:
-            #Cleanup of completed jobs
+            # Cleanup of completed jobs
             del jobs[job_id]
 
 

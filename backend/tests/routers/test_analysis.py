@@ -6,7 +6,13 @@ from app.routers.analysis import jobs
 
 @pytest.mark.asyncio
 async def test_basic_job_flow(client):
-    response = client.post("/analyze")
+    content = {
+        "url": "https://sample.com/article",
+        "authors": ["Jane Doe", "John Doe"],
+        "org": "sample news",
+        "paragraphs": [{"index": 0, "text": "The article text"}, {"index": 1, "text": "is in here"}]
+    }
+    response = client.post("/analyze", content=json.dumps(content))
     assert response.status_code == 200
 
     job_id = response.json()["job_id"]

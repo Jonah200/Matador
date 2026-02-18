@@ -2,6 +2,8 @@ import asyncio
 import time
 import random
 
+from app.DTO.Article import Article
+
 def fake_nlp_task(paragraph_index: int):
 
     time.sleep(2)
@@ -15,9 +17,9 @@ def fake_nlp_task(paragraph_index: int):
         }
     }
 
-async def run_fake_analysis(job_id: str, queue: asyncio.Queue):
+async def run_fake_analysis(job_id: str, queue: asyncio.Queue, article: Article):
     loop = asyncio.get_running_loop()
-
+    
     try:
         for i in range(5):
             result = await loop.run_in_executor(
