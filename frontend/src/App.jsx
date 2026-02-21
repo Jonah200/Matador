@@ -14,32 +14,36 @@ const InfoTooltip = ({ label, text }) => {
     <span className="relative inline-flex items-center">
       <button
         type="button"
-        className="ml-2 inline-flex items-center justify-center w-5 h-5 rounded-full border border-slate-200 text-slate-500 hover:bg-slate-50
-                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-        aria-label={label}
-        aria-expanded={open}
+        className="ml-2 flex items-center justify-center w-4 h-4 rounded-full border border-slate-300 text-[10px] text-slate-500 hover:bg-slate-50 transition-colors"
         onClick={() => setOpen((v) => !v)}
       >
         i
       </button>
 
-      {open ? (
-        <div
-          className="absolute bottom-7 right-0 w-64 rounded-xl border border-slate-200 bg-white/95 backdrop-blur-md shadow-xl p-3 z-20"
-          role="dialog"
-          aria-label={label}
-        >
-          <div className="text-[12px] text-slate-700 leading-5">{text}</div>
-          <button
-            type="button"
-            className="mt-2 text-[12px] font-bold text-blue-600 hover:underline
-                       focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded"
-            onClick={() => setOpen(false)}
-          >
-            Close
-          </button>
-        </div>
-      ) : null}
+      {open && (
+        <>
+          {/* Transparent layer to close when clicking away */}
+          <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
+          
+          {/* THE FIX: Anchor it to the right with a negative offset to pull it inward */}
+          <div className="absolute bottom-full mb-2 right-[-25px] w-[180px] rounded-xl border border-slate-200 bg-white shadow-xl p-3 z-50 animate-in fade-in zoom-in-95">
+            
+            {/* The Pointer: Adjusted to stay over the 'i' button */}
+            <div className="absolute top-full right-[28px] -mt-px border-8 border-transparent border-t-white" />
+            
+            <div className="text-[11px] text-slate-700 leading-normal font-medium">
+              {text}
+            </div>
+            
+            <button 
+              onClick={() => setOpen(false)}
+              className="mt-2 text-[10px] font-bold text-blue-600 uppercase block"
+            >
+              Close
+            </button>
+          </div>
+        </>
+      )}
     </span>
   );
 };
@@ -58,13 +62,13 @@ const EvidenceCard = ({
       role="group"
       aria-label={title}
     >
-      <div className="flex justify-between items-start gap-3">
-        <div className="flex items-center">
+      <div className="flex flex-wrap justify-between items-start gap-1">
+        <div className="flex items-center min-w-0">
           <SectionLabel text={title} />
           <InfoTooltip label={`${title} definition`} text={tooltipText} />
         </div>
 
-        <span className={`text-[10px] font-bold px-2 py-1 rounded-lg ${presencePillClass}`}>
+        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 whitespace-nowrap ${presencePillClass}`}>
           {presenceLabel}
         </span>
       </div>
@@ -108,7 +112,6 @@ const HighlightCard = ({ h, onJump }) => {
         </p>
 
         <div className="flex items-center gap-2">
-          {/* (3) NEW: Jump button (wired as a stub — see handler below) */}
           <button
             type="button"
             onClick={() => onJump?.(h)}
@@ -366,20 +369,31 @@ function App() {
         ) : null}
 
         {/* Article Summary*/}
-        <section className= "bg-white rounded-2xl p-4 shadow-sm border-l-4 border-l-blue-500">
+        <section className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-l-blue-500">
           <div className="flex justify-between items-start">
             <SectionLabel text="Summary"/>
             <button
               type="button"
               onClick={handleCopy}
-              className="text-[10px] font-bold text-blue-600 hover:bg-blue-50 px-2 py-1 rounded transition-colors
-                         focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+              className="flex items-center gap-1 text-[10px] font-bold text-blue-600 hover:bg-blue-50 px-2 py-1 rounded transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
               aria-label="Copy summary to clipboard"
             >
-              {copied ? '✓ COPIED' : 'COPY'}
+              {copied ? (
+                <span className="flex items-center gap-1">
+                  <span className="text-[12px]">✓</span>
+                  <span>COPIED</span>
+                </span>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                  </svg>
+                  <span>COPY</span>
+                </>
+              )}
             </button>
           </div>
-          <p className="text-sm text-slate-700 leading-relaxed">{summaryText}</p>
+          <p className="text-sm text-slate-700 leading-relaxed mt-1">{summaryText}</p>
         </section>
 
        {/* Subjects */}
