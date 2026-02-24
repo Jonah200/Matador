@@ -1,0 +1,236 @@
+[
+    {
+        "text": "WASHINGTON",
+        "label": "GPE",
+        "start_char": 0,
+        "end_char": 10
+    },
+    {
+        "text": "White House",
+        "label": "ORG",
+        "start_char": 18,
+        "end_char": 29
+    },
+    {
+        "text": "Tom Homan",
+        "label": "PERSON",
+        "start_char": 42,
+        "end_char": 51
+    },
+    {
+        "text": "Sunday",
+        "label": "DATE",
+        "start_char": 57,
+        "end_char": 63
+    },
+    {
+        "text": "more than 1,000",
+        "label": "CARDINAL",
+        "start_char": 69,
+        "end_char": 84
+    },
+    {
+        "text": "Minnesota",
+        "label": "GPE",
+        "start_char": 114,
+        "end_char": 123
+    },
+    {
+        "text": "Twin Cities",
+        "label": "LOC",
+        "start_char": 126,
+        "end_char": 137
+    },
+    {
+        "text": "hundreds",
+        "label": "CARDINAL",
+        "start_char": 147,
+        "end_char": 155
+    },
+    {
+        "text": "the days ahead",
+        "label": "DATE",
+        "start_char": 176,
+        "end_char": 190
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 206,
+        "end_char": 211
+    },
+    {
+        "text": "Homan",
+        "label": "PERSON",
+        "start_char": 482,
+        "end_char": 487
+    },
+    {
+        "text": "CBS",
+        "label": "ORG",
+        "start_char": 493,
+        "end_char": 496
+    },
+    {
+        "text": "Face the Nation",
+        "label": "WORK_OF_ART",
+        "start_char": 499,
+        "end_char": 514
+    },
+    {
+        "text": "well over 1,000",
+        "label": "CARDINAL",
+        "start_char": 726,
+        "end_char": 741
+    },
+    {
+        "text": "Monday",
+        "label": "DATE",
+        "start_char": 760,
+        "end_char": 766
+    },
+    {
+        "text": "Tuesday",
+        "label": "DATE",
+        "start_char": 768,
+        "end_char": 775
+    },
+    {
+        "text": "several hundred",
+        "label": "CARDINAL",
+        "start_char": 790,
+        "end_char": 805
+    },
+    {
+        "text": "Homan",
+        "label": "PERSON",
+        "start_char": 813,
+        "end_char": 818
+    },
+    {
+        "text": "Thousands",
+        "label": "CARDINAL",
+        "start_char": 869,
+        "end_char": 878
+    },
+    {
+        "text": "Minneapolis",
+        "label": "GPE",
+        "start_char": 908,
+        "end_char": 919
+    },
+    {
+        "text": "St. Paul",
+        "label": "GPE",
+        "start_char": 924,
+        "end_char": 932
+    },
+    {
+        "text": "U.S. Immigration and Customs Enforcement’s",
+        "label": "ORG",
+        "start_char": 942,
+        "end_char": 984
+    },
+    {
+        "text": "The Department of Homeland Security",
+        "label": "ORG",
+        "start_char": 1010,
+        "end_char": 1045
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 1222,
+        "end_char": 1225
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1226,
+        "end_char": 1230
+    },
+    {
+        "text": "Renee Good",
+        "label": "PERSON",
+        "start_char": 1416,
+        "end_char": 1426
+    },
+    {
+        "text": "Alex Pretti",
+        "label": "PERSON",
+        "start_char": 1431,
+        "end_char": 1442
+    },
+    {
+        "text": "Homan",
+        "label": "ORG",
+        "start_char": 1564,
+        "end_char": 1569
+    },
+    {
+        "text": "last week",
+        "label": "DATE",
+        "start_char": 1580,
+        "end_char": 1589
+    },
+    {
+        "text": "700",
+        "label": "CARDINAL",
+        "start_char": 1595,
+        "end_char": 1598
+    },
+    {
+        "text": "Minnesota",
+        "label": "GPE",
+        "start_char": 1628,
+        "end_char": 1637
+    },
+    {
+        "text": "more than 2,000",
+        "label": "CARDINAL",
+        "start_char": 1671,
+        "end_char": 1686
+    },
+    {
+        "text": "Thursday",
+        "label": "DATE",
+        "start_char": 1709,
+        "end_char": 1717
+    },
+    {
+        "text": "this week",
+        "label": "DATE",
+        "start_char": 1796,
+        "end_char": 1805
+    },
+    {
+        "text": "Homan",
+        "label": "PERSON",
+        "start_char": 1808,
+        "end_char": 1813
+    },
+    {
+        "text": "the Twin Cities",
+        "label": "GPE",
+        "start_char": 1849,
+        "end_char": 1864
+    },
+    {
+        "text": "Minnesota",
+        "label": "GPE",
+        "start_char": 1943,
+        "end_char": 1952
+    },
+    {
+        "text": "Twin Cities",
+        "label": "GPE",
+        "start_char": 2077,
+        "end_char": 2088
+    },
+    {
+        "text": "Homan",
+        "label": "PERSON",
+        "start_char": 2100,
+        "end_char": 2105
+    }
+]

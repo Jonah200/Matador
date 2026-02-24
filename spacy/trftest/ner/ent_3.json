@@ -1,0 +1,224 @@
+[
+    {
+        "text": "State",
+        "label": "ORG",
+        "start_char": 20,
+        "end_char": 25
+    },
+    {
+        "text": "Hillary Clinton",
+        "label": "PERSON",
+        "start_char": 26,
+        "end_char": 41
+    },
+    {
+        "text": "Czech",
+        "label": "NORP",
+        "start_char": 57,
+        "end_char": 62
+    },
+    {
+        "text": "the Munich Security Conference",
+        "label": "EVENT",
+        "start_char": 83,
+        "end_char": 113
+    },
+    {
+        "text": "Germany",
+        "label": "GPE",
+        "start_char": 117,
+        "end_char": 124
+    },
+    {
+        "text": "Saturday",
+        "label": "DATE",
+        "start_char": 128,
+        "end_char": 136
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 139,
+        "end_char": 146
+    },
+    {
+        "text": "Donald Trump",
+        "label": "PERSON",
+        "start_char": 239,
+        "end_char": 251
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 274,
+        "end_char": 280
+    },
+    {
+        "text": "Petr Macinka",
+        "label": "PERSON",
+        "start_char": 282,
+        "end_char": 294
+    },
+    {
+        "text": "Czech",
+        "label": "NORP",
+        "start_char": 298,
+        "end_char": 303
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 340,
+        "end_char": 345
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 364,
+        "end_char": 371
+    },
+    {
+        "text": "First",
+        "label": "ORDINAL",
+        "start_char": 436,
+        "end_char": 441
+    },
+    {
+        "text": "Macinka",
+        "label": "PERSON",
+        "start_char": 479,
+        "end_char": 486
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 518,
+        "end_char": 525
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 528,
+        "end_char": 533
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 580,
+        "end_char": 587
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 672,
+        "end_char": 689
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 823,
+        "end_char": 828
+    },
+    {
+        "text": "America",
+        "label": "GPE",
+        "start_char": 841,
+        "end_char": 848
+    },
+    {
+        "text": "Macinka",
+        "label": "PERSON",
+        "start_char": 968,
+        "end_char": 975
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 984,
+        "end_char": 991
+    },
+    {
+        "text": "Macinka",
+        "label": "PERSON",
+        "start_char": 1026,
+        "end_char": 1033
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1131,
+        "end_char": 1135
+    },
+    {
+        "text": "recent years",
+        "label": "DATE",
+        "start_char": 1139,
+        "end_char": 1151
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 1154,
+        "end_char": 1161
+    },
+    {
+        "text": "Macinka",
+        "label": "PERSON",
+        "start_char": 1239,
+        "end_char": 1246
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 1371,
+        "end_char": 1378
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1408,
+        "end_char": 1412
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 1717,
+        "end_char": 1724
+    },
+    {
+        "text": "2016",
+        "label": "DATE",
+        "start_char": 1862,
+        "end_char": 1866
+    },
+    {
+        "text": "Barack Obama",
+        "label": "PERSON",
+        "start_char": 1932,
+        "end_char": 1944
+    },
+    {
+        "text": "millions",
+        "label": "CARDINAL",
+        "start_char": 2011,
+        "end_char": 2019
+    },
+    {
+        "text": "Clinton",
+        "label": "PERSON",
+        "start_char": 2122,
+        "end_char": 2129
+    },
+    {
+        "text": "Obama",
+        "label": "PERSON",
+        "start_char": 2157,
+        "end_char": 2162
+    },
+    {
+        "text": "Fox News Digital",
+        "label": "ORG",
+        "start_char": 2334,
+        "end_char": 2350
+    }
+]

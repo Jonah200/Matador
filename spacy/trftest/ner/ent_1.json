@@ -1,0 +1,662 @@
+[
+    {
+        "text": "MUNICH",
+        "label": "GPE",
+        "start_char": 0,
+        "end_char": 6
+    },
+    {
+        "text": "Feb 15",
+        "label": "DATE",
+        "start_char": 8,
+        "end_char": 14
+    },
+    {
+        "text": "Reuters",
+        "label": "ORG",
+        "start_char": 16,
+        "end_char": 23
+    },
+    {
+        "text": "European Commission",
+        "label": "ORG",
+        "start_char": 27,
+        "end_char": 46
+    },
+    {
+        "text": "Ursula von der Leyen",
+        "label": "PERSON",
+        "start_char": 57,
+        "end_char": 77
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 123,
+        "end_char": 131
+    },
+    {
+        "text": "weekend",
+        "label": "DATE",
+        "start_char": 148,
+        "end_char": 155
+    },
+    {
+        "text": "Munich Security Conference",
+        "label": "EVENT",
+        "start_char": 158,
+        "end_char": 184
+    },
+    {
+        "text": "the past year",
+        "label": "DATE",
+        "start_char": 316,
+        "end_char": 329
+    },
+    {
+        "text": "Donald Trump’s",
+        "label": "PERSON",
+        "start_char": 333,
+        "end_char": 347
+    },
+    {
+        "text": "the White House",
+        "label": "ORG",
+        "start_char": 358,
+        "end_char": 373
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 383,
+        "end_char": 387
+    },
+    {
+        "text": "Greenland",
+        "label": "GPE",
+        "start_char": 414,
+        "end_char": 423
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 447,
+        "end_char": 455
+    },
+    {
+        "text": "Washington",
+        "label": "GPE",
+        "start_char": 469,
+        "end_char": 479
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 530,
+        "end_char": 534
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 545,
+        "end_char": 549
+    },
+    {
+        "text": "State",
+        "label": "ORG",
+        "start_char": 563,
+        "end_char": 568
+    },
+    {
+        "text": "Marco Rubio",
+        "label": "PERSON",
+        "start_char": 569,
+        "end_char": 580
+    },
+    {
+        "text": "Europeans",
+        "label": "NORP",
+        "start_char": 612,
+        "end_char": 621
+    },
+    {
+        "text": "Rubio",
+        "label": "PERSON",
+        "start_char": 648,
+        "end_char": 653
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 663,
+        "end_char": 667
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 688,
+        "end_char": 694
+    },
+    {
+        "text": "JD Vance",
+        "label": "PERSON",
+        "start_char": 738,
+        "end_char": 746
+    },
+    {
+        "text": "last year",
+        "label": "DATE",
+        "start_char": 747,
+        "end_char": 756
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 781,
+        "end_char": 787
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 834,
+        "end_char": 838
+    },
+    {
+        "text": "Russia",
+        "label": "GPE",
+        "start_char": 840,
+        "end_char": 846
+    },
+    {
+        "text": "Moscow",
+        "label": "GPE",
+        "start_char": 850,
+        "end_char": 856
+    },
+    {
+        "text": "Ukraine",
+        "label": "GPE",
+        "start_char": 866,
+        "end_char": 873
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 923,
+        "end_char": 927
+    },
+    {
+        "text": "its fifth year",
+        "label": "DATE",
+        "start_char": 990,
+        "end_char": 1004
+    },
+    {
+        "text": "Moscow",
+        "label": "GPE",
+        "start_char": 1009,
+        "end_char": 1015
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 1054,
+        "end_char": 1062
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1190,
+        "end_char": 1194
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 1242,
+        "end_char": 1247
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 1284,
+        "end_char": 1290
+    },
+    {
+        "text": "the coming years",
+        "label": "DATE",
+        "start_char": 1371,
+        "end_char": 1387
+    },
+    {
+        "text": "Washington",
+        "label": "GPE",
+        "start_char": 1400,
+        "end_char": 1410
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 1447,
+        "end_char": 1453
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 1465,
+        "end_char": 1469
+    },
+    {
+        "text": "German",
+        "label": "NORP",
+        "start_char": 1493,
+        "end_char": 1499
+    },
+    {
+        "text": "Friedrich Merz",
+        "label": "PERSON",
+        "start_char": 1511,
+        "end_char": 1525
+    },
+    {
+        "text": "French",
+        "label": "NORP",
+        "start_char": 1527,
+        "end_char": 1533
+    },
+    {
+        "text": "Macron",
+        "label": "PERSON",
+        "start_char": 1553,
+        "end_char": 1559
+    },
+    {
+        "text": "British",
+        "label": "NORP",
+        "start_char": 1564,
+        "end_char": 1571
+    },
+    {
+        "text": "Keir Starmer",
+        "label": "PERSON",
+        "start_char": 1587,
+        "end_char": 1599
+    },
+    {
+        "text": "Munich",
+        "label": "GPE",
+        "start_char": 1628,
+        "end_char": 1634
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 1650,
+        "end_char": 1658
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 1674,
+        "end_char": 1678
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 1738,
+        "end_char": 1743
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1756,
+        "end_char": 1760
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 1791,
+        "end_char": 1797
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 1868,
+        "end_char": 1885
+    },
+    {
+        "text": "Merz",
+        "label": "PERSON",
+        "start_char": 1989,
+        "end_char": 1993
+    },
+    {
+        "text": "Friday",
+        "label": "DATE",
+        "start_char": 2017,
+        "end_char": 2023
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 2072,
+        "end_char": 2076
+    },
+    {
+        "text": "Merz",
+        "label": "PERSON",
+        "start_char": 2099,
+        "end_char": 2103
+    },
+    {
+        "text": "Macron",
+        "label": "PERSON",
+        "start_char": 2133,
+        "end_char": 2139
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 2148,
+        "end_char": 2156
+    },
+    {
+        "text": "France",
+        "label": "GPE",
+        "start_char": 2177,
+        "end_char": 2183
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 2238,
+        "end_char": 2244
+    },
+    {
+        "text": "Britain",
+        "label": "GPE",
+        "start_char": 2251,
+        "end_char": 2258
+    },
+    {
+        "text": "Trident",
+        "label": "PRODUCT",
+        "start_char": 2261,
+        "end_char": 2268
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 2313,
+        "end_char": 2330
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 2353,
+        "end_char": 2359
+    },
+    {
+        "text": "Russia",
+        "label": "GPE",
+        "start_char": 2612,
+        "end_char": 2618
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 2641,
+        "end_char": 2646
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 2648,
+        "end_char": 2656
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 2698,
+        "end_char": 2702
+    },
+    {
+        "text": "last year",
+        "label": "DATE",
+        "start_char": 2718,
+        "end_char": 2727
+    },
+    {
+        "text": "2%",
+        "label": "PERCENT",
+        "start_char": 2767,
+        "end_char": 2769
+    },
+    {
+        "text": "3.5%",
+        "label": "PERCENT",
+        "start_char": 2780,
+        "end_char": 2784
+    },
+    {
+        "text": "a further 1.5%",
+        "label": "PERCENT",
+        "start_char": 2798,
+        "end_char": 2812
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 2864,
+        "end_char": 2872
+    },
+    {
+        "text": "nearly 80%",
+        "label": "PERCENT",
+        "start_char": 2900,
+        "end_char": 2910
+    },
+    {
+        "text": "Ukraine",
+        "label": "GPE",
+        "start_char": 2935,
+        "end_char": 2942
+    },
+    {
+        "text": "von der Leyen",
+        "label": "ORG",
+        "start_char": 2950,
+        "end_char": 2963
+    },
+    {
+        "text": "Munich",
+        "label": "GPE",
+        "start_char": 2973,
+        "end_char": 2979
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 2992,
+        "end_char": 3000
+    },
+    {
+        "text": "France",
+        "label": "GPE",
+        "start_char": 3090,
+        "end_char": 3096
+    },
+    {
+        "text": "Germany",
+        "label": "GPE",
+        "start_char": 3098,
+        "end_char": 3105
+    },
+    {
+        "text": "Italy",
+        "label": "GPE",
+        "start_char": 3107,
+        "end_char": 3112
+    },
+    {
+        "text": "Poland",
+        "label": "GPE",
+        "start_char": 3114,
+        "end_char": 3120
+    },
+    {
+        "text": "Sweden",
+        "label": "GPE",
+        "start_char": 3125,
+        "end_char": 3131
+    },
+    {
+        "text": "Thursday",
+        "label": "DATE",
+        "start_char": 3161,
+        "end_char": 3169
+    },
+    {
+        "text": "European Long-range Strike Approach",
+        "label": "PRODUCT",
+        "start_char": 3189,
+        "end_char": 3224
+    },
+    {
+        "text": "NATO",
+        "label": "ORG",
+        "start_char": 3300,
+        "end_char": 3304
+    },
+    {
+        "text": "Thursday",
+        "label": "DATE",
+        "start_char": 3335,
+        "end_char": 3343
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 3359,
+        "end_char": 3367
+    },
+    {
+        "text": "four",
+        "label": "CARDINAL",
+        "start_char": 3405,
+        "end_char": 3409
+    },
+    {
+        "text": "pan-European",
+        "label": "NORP",
+        "start_char": 3506,
+        "end_char": 3518
+    },
+    {
+        "text": "FCAS",
+        "label": "ORG",
+        "start_char": 3584,
+        "end_char": 3588
+    },
+    {
+        "text": "French",
+        "label": "NORP",
+        "start_char": 3589,
+        "end_char": 3595
+    },
+    {
+        "text": "German",
+        "label": "NORP",
+        "start_char": 3596,
+        "end_char": 3602
+    },
+    {
+        "text": "months",
+        "label": "DATE",
+        "start_char": 3659,
+        "end_char": 3665
+    },
+    {
+        "text": "European Union",
+        "label": "ORG",
+        "start_char": 3761,
+        "end_char": 3775
+    },
+    {
+        "text": "EU",
+        "label": "ORG",
+        "start_char": 3867,
+        "end_char": 3869
+    },
+    {
+        "text": "France",
+        "label": "GPE",
+        "start_char": 3899,
+        "end_char": 3905
+    },
+    {
+        "text": "European",
+        "label": "NORP",
+        "start_char": 3946,
+        "end_char": 3954
+    },
+    {
+        "text": "Germany",
+        "label": "GPE",
+        "start_char": 3986,
+        "end_char": 3993
+    },
+    {
+        "text": "The Netherlands",
+        "label": "GPE",
+        "start_char": 3998,
+        "end_char": 4013
+    },
+    {
+        "text": "Bayerischer Hof",
+        "label": "FAC",
+        "start_char": 4077,
+        "end_char": 4092
+    },
+    {
+        "text": "Ukrainian",
+        "label": "NORP",
+        "start_char": 4100,
+        "end_char": 4109
+    },
+    {
+        "text": "Volodymyr Zelenskiy",
+        "label": "PERSON",
+        "start_char": 4120,
+        "end_char": 4139
+    },
+    {
+        "text": "Russian",
+        "label": "NORP",
+        "start_char": 4241,
+        "end_char": 4248
+    },
+    {
+        "text": "Last month",
+        "label": "DATE",
+        "start_char": 4258,
+        "end_char": 4268
+    },
+    {
+        "text": "Ukraine",
+        "label": "GPE",
+        "start_char": 4276,
+        "end_char": 4283
+    },
+    {
+        "text": "more than 6,000",
+        "label": "CARDINAL",
+        "start_char": 4300,
+        "end_char": 4315
+    },
+    {
+        "text": "150",
+        "label": "CARDINAL",
+        "start_char": 4327,
+        "end_char": 4330
+    }
+]
