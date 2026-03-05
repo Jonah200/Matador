@@ -22,13 +22,8 @@ const InfoTooltip = ({ label, text }) => {
 
       {open && (
         <>
-          {/* Transparent layer to close when clicking away */}
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          
-          {/* THE FIX: Anchor it to the right with a negative offset to pull it inward */}
           <div className="absolute bottom-full mb-2 right-[-25px] w-[180px] rounded-xl border border-slate-200 bg-white shadow-xl p-3 z-50 animate-in fade-in zoom-in-95">
-            
-            {/* The Pointer: Adjusted to stay over the 'i' button */}
             <div className="absolute top-full right-[28px] -mt-px border-8 border-transparent border-t-white" />
             
             <div className="text-[11px] text-slate-700 leading-normal font-medium">
@@ -166,6 +161,10 @@ function App() {
   const [url, setUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
+  const [analysisResults, setAnalysisResults] = useState([]); 
+  const [highlights, setHighlights] = useState([]);           
+  const [summaryText, setSummaryText] = useState("Waiting for analysis...");
+
   // Analysis state
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -180,27 +179,7 @@ function App() {
 
   // Collapse subjects
   const [showAllSubjects, setShowAllSubjects] = useState(false);
-
-
-  // Placeholder subjects
-  const summaryText =
-    "This article explores the legislative shift in climate policy. The narrative relies on emotional appeals to highlight government inaction.";
-
-  const highlights = [
-    {
-      id: "h1",
-      subject: "EPA",
-      issue: "Loaded Adjective",
-      confidence: "Medium",
-      quote: "...the government's catastrophic failure to protect citizens...",
-      explanation:
-        "The phrase uses emotionally loaded language that frames the situation as an extreme moral failing.",
-      signals: ["Loaded adjectives", "Catastrophic framing"],
-      type: "emotional",
-      order: 1,
-    },
-  ];
-
+  
   const domain = useMemo(() => {
     try {
       if (!url) return "";
@@ -262,8 +241,13 @@ function App() {
     return Array.from(set);
   }, [highlights]);
 
-  const emotionalCount = useMemo(() => highlights.filter((h) => h.type === "emotional").length, [highlights]);
-  const subjectivityCount = useMemo(() => highlights.filter((h) => h.type === "subjective").length, [highlights]);
+  const emotionalCount = useMemo(() => 
+    highlights.filter((h) => h.type === "emotional").length, 
+  [highlights]);
+
+  const subjectivityCount = useMemo(() => 
+    highlights.filter((h) => h.type === "subjective").length, 
+  [highlights]);
 
   const emotionalPresence = emotionalCount >= 3 ? "High" : emotionalCount >= 1 ? "Detected" : "None";
   const subjectivityPresence = subjectivityCount >= 3 ? "High" : subjectivityCount >= 1 ? "Detected" : "None";
@@ -276,12 +260,20 @@ function App() {
         : "bg-emerald-50 text-emerald-700";
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
-        setUrl(tabs[0].url)
-      }
-    });
-  }, [])
+    if (typeof chrome !== "undefined" && chrome.tabs && chrome.tabs.query) {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0] && tabs[0].url) {
+          setUrl(tabs[0].url);
+        } else {
+          setUrl("https://www.apnews.com/test-article");
+        }
+      });
+    } else {
+      // DEVELOPMENT FALLBACK: This runs when you're just using a regular browser
+      console.log("Not in extension mode: Setting test URL");
+      setUrl("https://www.apnews.com/mock-testing-url");
+    }
+  }, []);
 
   const handleCopy = () => {
     const text = `Summary (${domain || "current article"}):\n\n${summaryText}`;
@@ -290,18 +282,97 @@ function App() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const API_BASE = "http://127.0.0.1:8000";
+
   const handleAnalyze = async () => {
+    if (!url) {
+      console.error("No URL found to analyze.");
+      setErrorMsg("Please wait for the page to load or enter a URL.");
+      return; 
+    }
+
     setErrorMsg("");
     setIsAnalyzing(true);
+    setAnalysisResults([]); 
+    setHighlights([]);      
+    setSummaryText("Analyzing article content...");
 
     try {
-      // TODO: replace with  API call
-      await new Promise((r) => setTimeout(r, 800));
+      const payload = {
+        url: url,
+        authors: ["John Doe"], 
+        org: "General News", 
+        paragraphs: [
+          { index: 0, text: "Sample paragraph one." },
+          { index: 1, text: "Sample paragraph two." }
+        ]
+      };
 
-      setLastUpdated(new Date());
-    } catch (e) {
-      setErrorMsg("Couldn’t analyze this page (unsupported layout, paywall, or blocked content).");
-    } finally {
+      const res = await fetch(`${API_BASE}/analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Server rejected request:", errorData);
+        throw new Error("Analysis failed to start.");
+      }
+
+      const { job_id } = await res.json();
+      
+      const es = new EventSource(`${API_BASE}/stream/${job_id}`);
+      
+      es.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "paragraph") {
+          setAnalysisResults((prev) => [...prev, data]);
+
+          if (data.analysis.subjectivity_model > 0.5 || data.analysis.emotional_intensity > 0.5) {
+            const isEmotional = data.analysis.emotional_intensity > data.analysis.subjectivity_model;
+            
+            const newHighlight = {
+              id: `h-${data.index}-${Date.now()}`,
+              subject: "General",
+              issue: isEmotional ? "Emotional Language" : "Subjective Phrasing",
+              confidence: data.analysis.subjectivity_model > 0.8 ? "High" : "Medium",
+              quote: `Paragraph ${data.index + 1} contains high ${isEmotional ? 'emotional' : 'subjective'} markers.`,
+              explanation: `The AI model detected ${isEmotional ? 'emotional intensity' : 'subjective intent'} at ${(data.analysis[isEmotional ? 'emotional_intensity' : 'subjectivity_model'] * 100).toFixed(0)}%.`,
+              type: isEmotional ? "emotional" : "subjective",
+              signals: isEmotional ? ["Loaded Adjectives", "Intensifiers"] : ["Opinionated"],
+              order: data.index
+            };
+
+            setHighlights((prev) => [...prev, newHighlight]);
+          }
+          
+          setLastUpdated(new Date());
+        }
+
+        if (data.type === "complete") {
+          setSummaryText("Analysis complete. Found signals in the text below.");
+          es.close();
+          setIsAnalyzing(false);
+        }
+
+        if (data.type === "error") {
+          setErrorMsg(data.message);
+          es.close();
+          setIsAnalyzing(false);
+        }
+      };
+
+      es.onerror = (err) => {
+        console.error("EventSource failed:", err);
+        setErrorMsg("Lost connection to the analysis server.");
+        es.close();
+        setIsAnalyzing(false);
+      };
+
+    } catch (err) {
+      setErrorMsg(err.message);
       setIsAnalyzing(false);
     }
   };
@@ -341,26 +412,20 @@ function App() {
       <main className = "p-3 space-y-4">
 
         {/* Verified source row */}
-        <div className="flex items-center gap-2 px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
-              Verified Source: Associated Press
-            </span>
-          </div>
+        {lastUpdated && (
+          <div className="flex items-center gap-2 px-1 animate-in fade-in duration-500">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+                Analyzed from: {domain}
+              </span>
+            </div>
 
-          {/* Last updated */}
-          <div className="text-[10px] text-slate-500 font-semibold">
-            {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : ""}
+            <div className="text-[10px] text-slate-500 font-semibold">
+              Updated {lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            </div>
           </div>
-        </div>
-
-        {/* Show domain and errors */}
-        {domain ? (
-          <div className="px-1 text-[12px] text-slate-600">
-            Analyzed from: <span className="font-semibold">{domain}</span>
-          </div>
-        ) : null}
+        )}
 
         {errorMsg ? (
           <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-[12px] text-red-700">
