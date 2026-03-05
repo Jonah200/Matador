@@ -295,7 +295,7 @@ function App() {
     setIsAnalyzing(true);
     setAnalysisResults([]); 
     setHighlights([]);      
-    setSummaryText("Analyzing article content...");
+    setSummaryText("Generating summary...");
 
     try {
       const payload = {
@@ -303,8 +303,8 @@ function App() {
         authors: ["John Doe"], 
         org: "General News", 
         paragraphs: [
-          { index: 0, text: "Sample paragraph one." },
-          { index: 1, text: "Sample paragraph two." }
+          { index: 0, text: "The government's catastrophic failure to address the spiraling inflation crisis is a slap in the face to every hardworking citizen." },
+          { index: 1, text: "While some claim the economy is recovering, the blatant corruption within the legislative branch suggests a much darker reality." }
         ]
       };
 
@@ -352,7 +352,7 @@ function App() {
         }
 
         if (data.type === "complete") {
-          setSummaryText("Analysis complete. Found signals in the text below.");
+          setSummaryText("The government is implementing a new climate policy focused on carbon reduction targets, renewable energy subsidies, and industrial penalties.");
           es.close();
           setIsAnalyzing(false);
         }
