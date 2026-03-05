@@ -1,63 +1,54 @@
-from fastapi import APIRouter, HTTPException
+from concurrent.futures import Executor
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 import uuid
 import asyncio
 import json
-import time
 
-from app.services.sample_service import run_fake_analysis
 from app.DTO.Article import Article
+from app.services.core import run_all_services
+from app.util.event_bus import EventBus
+from app.util.job_store import JobStore
+from app.util.types import Job, Paragraph
 
 router = APIRouter()
 
-jobs: dict[str, dict] = {}
-
-# This function will watch for jobs that were created over ttl seconds ago and remove them to prevent old results from piling up
-async def cleanup_jobs(ttl=300):
-    while True:
-        now = time.time()
-        to_delete = [job_id for job_id, job in jobs.items()
-                     if now - job["created"] > ttl]
-        for job_id in to_delete:
-            del jobs[job_id]
-        await asyncio.sleep(60)
-
 @router.post("/analyze")
-async def analyze(article: Article):
+async def analyze(article: Article, request: Request):
     job_id = str(uuid.uuid4())
 
-    queue = asyncio.Queue()
+    job = Job(job_id=job_id,
+              paragraphs=[Paragraph(
+                  index=para['index'],
+                  text=para['text']) 
+                  for para in article.paragraphs])
 
-    jobs[job_id] = {
-        "queue": queue,
-        "complete": False, # As of now this field is unnecessary, but it may be useful in the future
-        "created": time.time()
-    }
+    executor: Executor = request.app.state.executor
+    event_bus: EventBus = request.app.state.event_bus
+    job_store: JobStore = request.app.state.job_store
 
-    asyncio.create_task(run_fake_analysis(job_id, queue, article))
+    await job_store.create_job(job)
 
-    return {"job_id" : job_id}
+    asyncio.create_task(run_all_services(job_id, job_store, executor, event_bus))
+
+    return {"job_id": job_id}
 
 @router.get("/stream/{job_id}")
-async def stream_job(job_id: str):
-    
-    if job_id not in jobs:
-        raise HTTPException(status_code=404, detail="Job not found")
-    
-    queue = jobs[job_id]["queue"]
+async def stream_job(job_id: str, request: Request):
+    event_bus: EventBus = request.app.state.event_bus
+    job_store: JobStore = request.app.state.job_store
+
+    if not await job_store.exists(job_id):
+        raise HTTPException(status_code=404, detail="job_id not found")
 
     async def event_generator():
         try:
-            while True:
-                message = await queue.get()
-                yield f"data: {json.dumps(message)}\n\n"
-
-                if message["type"] == "complete":
+            async for event in event_bus.subscribe(job_id):
+                yield f"data: {json.dumps(event.to_dict())}\n\n"
+                if event.service_name == "job_complete":
                     break
-            
-        finally:
-            # Cleanup of completed jobs
-            del jobs[job_id]
 
+        except Exception as e:
+            print(e)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

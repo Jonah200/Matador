@@ -1,7 +1,8 @@
 from pydantic import BaseModel
+from typing import List, Dict, Union
 
 class Article(BaseModel):
     url: str
-    authors: list[str] | None = None
+    authors: List[str] | None = None
     org: str | None = None
-    paragraphs: list[dict]
+    paragraphs: List[Dict[str, Union[int, str]]]

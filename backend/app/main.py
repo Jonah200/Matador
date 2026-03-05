@@ -1,7 +1,11 @@
 import asyncio
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from app.routers import analysis
+
+from app.util.event_bus import InMemoryEventBus
+from app.util.job_store import InMemoryJobStore
 
 app = FastAPI()
 
@@ -11,7 +15,10 @@ app.include_router(analysis.router)
 # TODO We should load models here as well
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    cleanup_task = asyncio.create_task(analysis.cleanup_jobs())
+    app.state.executor = ThreadPoolExecutor()
+    app.state.event_bus = InMemoryEventBus()
+    app.state.job_store = InMemoryJobStore(event_bus=app.state.event_bus)
+    cleanup_task = asyncio.create_task(app.state.job_store.cleanup())
     try:
         yield
     finally:
@@ -20,6 +27,7 @@ async def lifespan(app: FastAPI):
             await cleanup_task
         except asyncio.CancelledError:
             pass
+        app.state.executor.shutdown(wait=True)
 
 app.router.lifespan_context = lifespan
 
