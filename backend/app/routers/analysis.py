@@ -35,6 +35,23 @@ async def analyze(article: Article, request: Request):
 
 @router.get("/stream/{job_id}")
 async def stream_job(job_id: str, request: Request):
+    """
+    The stream_job endpoint initiates an SSE stream of service results.
+    Params:
+        job_id (str): UUID4 Job_ID returned from /analysis. Included in URL String
+        request (Request): FastAPI request object, automatically included by the FastAPI router when endpoint is called
+
+    Returns:
+        StreamingResponse: On success initiates an SSE stream that will send service results as they become available.
+        Each returned service result is a JSON object representing a ServiceResult object with the following fields:
+        service_scope: str: Either 'article' or 'paragraph'
+        service_name: str: Name of returning service, or 'job_complete' once all services completed
+        result_code: str: Either 'complete' or 'failed'
+        paragraph_index: int | None: For paragraph scoped services this is the index in the paragraphs array the result corresponds to, null for article scoped services
+        result: dict | None: Dictionary of results returned by the AnalysisService run function, or null if an error occurred
+        error: str | None: Error string if the service raised and Exception, or null if returned normally
+        completed_at: float: Time of completion of the service in the form of seconds.microseconds since Epoch
+    """
     event_bus: EventBus = request.app.state.event_bus
     job_store: JobStore = request.app.state.job_store
 

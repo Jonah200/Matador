@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from concurrent.futures import Executor
-from enum import Enum
 from typing import List
 import asyncio
 
@@ -80,7 +79,8 @@ async def run_all_services(job_id: str, job_store: JobStore, executor: Executor,
             service_result = ServiceResult(service_name=service.name,
                                            service_scope=ServiceScope.ARTICLE,
                                            result_code=ServiceResultCode.COMPLETE,
-                                           result=result.copy())
+                                           result=result)
+
             stored = await job_store.store_result(job_id, service_result)
             if not stored:
                 return
