@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useMemo, useState } from "react";
+import { extractArticleFromPage } from "./content/extractArticle";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [article, setArticle] = useState(null);
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState("");
+
+  const previewText = useMemo(() => {
+    if (!article?.contentText) return "";
+    return article.contentText.slice(0, 1800);
+  }, [article]);
+
+  const runLocalExtraction = () => {
+    setStatus("extracting");
+    setError("");
+
+    try {
+      const result = extractArticleFromPage(document);
+      if (!result) {
+        setStatus("error");
+        setError("No extractable content found on this page.");
+        return;
+      }
+
+      setArticle(result);
+      setStatus("done");
+    } catch (e) {
+      setStatus("error");
+      setError(e instanceof Error ? e.message : "Extraction failed");
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <main className="app-shell">
+      <section className="panel">
+        <h1>Matador Text Extraction</h1>
+        <p className="subtext">Basic extraction preview from the current page DOM.</p>
+        <button type="button" onClick={runLocalExtraction}>
+          Extract Page Text
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+        <p className="status">Status: {status}</p>
+        {error ? <p className="error">{error}</p> : null}
+      </section>
+
+      <section className="panel output">
+        <h2>Extracted Result</h2>
+        {!article ? (
+          <p className="subtext">Run extraction to display title and text preview.</p>
+        ) : (
+          <>
+            <p>
+              <strong>Title:</strong> {article.title}
+            </p>
+            <p>
+              <strong>URL:</strong> {article.url}
+            </p>
+            <p>
+              <strong>Byline:</strong> {article.byline || "Unknown"}
+            </p>
+            <p>
+              <strong>Length:</strong> {article.length} chars
+            </p>
+            <pre>{previewText}</pre>
+          </>
+        )}
+      </section>
+    </main>
+  );
 }
 
-export default App
+export default App;
