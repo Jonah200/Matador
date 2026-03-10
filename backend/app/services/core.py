@@ -110,8 +110,10 @@ async def run_all_services(job_id: str, job_store: JobStore, executor: Executor,
 
     # Wait for all tasks to finish
     # TODO handle failed tasks
-    await asyncio.gather(*tasks, return_exceptions=True)
-
+    completed = await asyncio.gather(*tasks, return_exceptions=True)
+    for ret in completed:
+        if isinstance(ret, BaseException):
+            print(f"Error on a service: {ret}", flush=True)
     await job_store.update_status(job_id, JobStatus.COMPLETE)
 
     # Publish job completion

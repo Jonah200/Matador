@@ -66,6 +66,6 @@ async def stream_job(job_id: str, request: Request):
                     break
 
         except Exception as e:
-            print(e)
+            print(f"Error: {e}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

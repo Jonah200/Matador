@@ -1,12 +1,16 @@
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import redis
 from app.routers import analysis
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
-from app.util.event_bus import InMemoryEventBus
-from app.util.job_store import InMemoryJobStore
+from app.util.event_bus import InMemoryEventBus, RedisEventBus
+from app.util.job_store import InMemoryJobStore, RedisJobStore
 
 app = FastAPI()
 
@@ -24,9 +28,20 @@ app.include_router(analysis.router)
 # TODO We should load models here as well
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    app.state.executor = ThreadPoolExecutor()
-    app.state.event_bus = InMemoryEventBus()
-    app.state.job_store = InMemoryJobStore(event_bus=app.state.event_bus)
+    redis_host = os.environ.get("REDIS_URL", "localhost")
+    redis_port = int(os.environ.get("REDIS_PORT", 6379))
+    redis_user = os.environ.get("REDIS_USER")
+    redis_pwd = os.environ.get("REDIS_PWD")
+    app.state.executor = ProcessPoolExecutor()
+    redis_client = redis.asyncio.Redis(host=redis_host, 
+                                       port=redis_port,
+                                       username=redis_user, 
+                                       password=redis_pwd, 
+                                       decode_responses=True, 
+                                       max_connections=20)
+    await redis_client.ping()
+    app.state.event_bus = RedisEventBus(redis=redis_client)
+    app.state.job_store = RedisJobStore(redis=redis_client, event_bus=app.state.event_bus)
     cleanup_task = asyncio.create_task(app.state.job_store.cleanup())
     try:
         yield

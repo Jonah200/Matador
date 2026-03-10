@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 import asyncio
 import time
 from typing import Dict
+import redis
+import os
+import json
 
 from app.util.event_bus import EventBus
 from app.util.types import Job, JobStatus, ServiceResult
@@ -87,3 +90,60 @@ class InMemoryJobStore(JobStore):
             job.results.append(result)
         return True
         
+class RedisJobStore(JobStore):
+    def __init__(self, event_bus: EventBus, redis: redis.Redis, maximum_lifetime: int = 600, completed_ttl: int = 300):
+        redis_url ="localhost"
+        self._maximum_lifetime = maximum_lifetime
+        self._completed_ttl = completed_ttl
+        self._redis = redis
+        self._event_bus = event_bus
+
+    async def initialize(self):
+        await self._redis.ping()
+
+    async def cleanup(self, completed_ttl = 300, maximum_lifetime = 600):
+        """
+        Redis handles cleanup via expire/TTL. This will wait for the job to expire, then delete the results channel.
+        """
+        pubsub = self._redis.pubsub()
+        await pubsub.psubscribe("__keyspace@0__:*")
+        # TODO Make sure REDIS is configured to publish keyspace messages
+
+        async for msg in pubsub.listen():
+            if msg['data'] == 'expired':
+                job_id = msg['channel'].split(":")[-1]
+                await self._event_bus.delete_channel(job_id)
+    
+    async def create_job(self, job):
+        key = f"job:{job.job_id}"
+        await self._redis.json().set(key, '$', job.to_dict(), nx=True)
+        await self._redis.expire(key, self._maximum_lifetime)
+
+    async def get_job(self, job_id):
+        key = f"job:{job_id}"
+        job_dict = await self._redis.json().get(key)
+        if not job_dict:
+            return # TODO raise?
+        return Job.from_dict(job_dict)
+
+    async def update_status(self, job_id, status):
+        key = f"job:{job_id}"
+        await self._redis.json().set(key, "$.status", status.value, xx=True)
+        if status == JobStatus.COMPLETE:
+            now = time.time()
+            await self._redis.json().set(key, "$.completed_at", now, xx=True)
+            await self._redis.expire(key, self._completed_ttl)
+
+    async def exists(self, job_id):
+        key = f"job:{job_id}"
+        if await self._redis.exists(key):
+            return True
+        return False
+
+    async def store_result(self, job_id, result):
+        key = f"job:{job_id}"
+        if await self.exists(job_id):
+            await self._redis.json().arrappend(key, "$.results", result.to_dict())
+            return True
+        else:
+            return False
