@@ -3,6 +3,7 @@ uvicorn[standard]
 redis[hiredis]
 spacy[transformers]
 pandas
+scikit-learn
 
 python-dotenv
 pydantic-settings

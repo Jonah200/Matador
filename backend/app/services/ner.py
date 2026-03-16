@@ -5,7 +5,7 @@ import time
 import numpy as np
 import json
 import pandas as pd
-from util import serper_request
+from app.util import serper_request
 from collections import Counter
 
 @register_service
