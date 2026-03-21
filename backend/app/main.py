@@ -14,6 +14,7 @@ from app.util.job_store import InMemoryJobStore, RedisJobStore
 
 app = FastAPI()
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
