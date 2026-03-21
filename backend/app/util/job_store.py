@@ -101,11 +101,13 @@ class RedisJobStore(JobStore):
     async def initialize(self):
         await self._redis.ping()
 
+    # TODO As is this will run on every server intance, but only one instance is needed. Possibly move this out of the app entirley??
     async def cleanup(self, completed_ttl = 300, maximum_lifetime = 600):
         """
         Redis handles cleanup via expire/TTL. This will wait for the job to expire, then delete the results channel.
         """
         pubsub = self._redis.pubsub()
+        # TODO May want to change this to use keyevent instead of keyspace.
         await pubsub.psubscribe("__keyspace@0__:*")
         # TODO Make sure REDIS is configured to publish keyspace messages
 

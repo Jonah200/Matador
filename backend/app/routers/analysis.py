@@ -21,7 +21,11 @@ async def analyze(article: Article, request: Request):
               paragraphs=[Paragraph(
                   index=para['index'],
                   text=para['text']) 
-                  for para in article.paragraphs])
+                  for para in article.paragraphs],
+              authors=article.authors.copy(),
+              url=article.url,
+              headline=article.headline,
+              org=article.org)
 
     executor: Executor = request.app.state.executor
     event_bus: EventBus = request.app.state.event_bus

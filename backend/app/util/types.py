@@ -45,11 +45,14 @@ class ServiceResult:
                              error=res_dict['error'],
                              completed_at=res_dict['completed_at'])
 
-# TODO add url, org, authors??
 @dataclass
 class Job:
     job_id: str
+    url: str
     paragraphs: List[Paragraph]
+    org: str | None = None
+    authors: List[str] | None = None
+    headline: str | None = None
     created_at: float = field(default_factory=time.time)
     status: JobStatus = JobStatus.PENDING
     results: List[ServiceResult] = field(default_factory=list)
@@ -60,7 +63,11 @@ class Job:
 
     def from_dict(job_dict: dict):
         job = Job(job_id=job_dict['job_id'],
+                  url=job_dict['url'],
                   paragraphs=[Paragraph(**para) for para in job_dict['paragraphs']],
+                  org=job_dict['org'],
+                  authors=job_dict['authors'].copy(),
+                  headline=job_dict['headline'],
                   created_at=job_dict['created_at'],
                   status=JobStatus(job_dict['status']),
                   results=[ServiceResult(**res) for res in job_dict['results']],

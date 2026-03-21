@@ -24,6 +24,8 @@ class AnalysisService(ABC):
         pass
 
 # Service Registry
+# Ideally this would be performed using a microservice architecture with a service orchestration tool, 
+# but we are using a monolithic server for simplicity
 REGISTERED_SERVICES: List[AnalysisService] = []
 
 # Decorator for registering service classes

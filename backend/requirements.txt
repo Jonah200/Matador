@@ -4,6 +4,10 @@ redis[hiredis]
 spacy[transformers]
 pandas
 scikit-learn
+datasets
+protobuf
+huggingface_hub[hf_xet]
+transformers[torch]
 
 python-dotenv
 pydantic-settings
