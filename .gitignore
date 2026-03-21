@@ -17,3 +17,7 @@ dist/
 .DS_Store
 .vscode/
 .idea
+
+# Models
+artifacts/
+**/artifacts/
