@@ -16,7 +16,7 @@ model = AutoModelForSequenceClassification.from_pretrained("distilbert-base-unca
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
 training_args = TrainingArguments(
-    output_dir="backend/artifacts/claim_model",
+    output_dir="ml/artifacts/claim_model",
     eval_strategy="epoch",
     save_strategy="epoch",
     per_device_train_batch_size=8,
