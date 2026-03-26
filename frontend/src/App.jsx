@@ -7,6 +7,7 @@ function App() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
+  // Keep the in-app preview short enough to stay scannable during local testing.
   const previewText = useMemo(() => {
     if (!article?.contentText) return "";
     return article.contentText.slice(0, 1800);
@@ -17,6 +18,7 @@ function App() {
     setError("");
 
     try {
+      // This path is mainly for testing extraction logic directly in the page context.
       const result = extractArticleFromPage(document);
       if (!result) {
         setStatus("error");

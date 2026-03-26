@@ -41,6 +41,7 @@ function isExtractRequest(message: unknown): message is ExtractRequestMessage {
 }
 
 export function handleExtractionRequest(message: unknown): ExtractResponseMessage | null {
+  // Ignore unrelated runtime messages so other extension features can coexist safely.
   if (!isExtractRequest(message)) return null;
 
   try {

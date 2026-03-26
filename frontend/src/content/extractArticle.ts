@@ -4,7 +4,7 @@ export type ExtractedArticle = {
   title: string;
   url: string;
   byline: string | null;
-  excerpt: string | null;
+  excerpt: string;
   contentText: string;
   length: number;
   siteName: string | null;
@@ -16,7 +16,8 @@ function normalizeWhitespace(input: string): string {
 }
 
 function preCleanForReadability(doc: Document): void {
-  const adSelectors = [
+  // Trim obvious ad and embedded noise before handing the clone to Readability.
+  const adJunkSelectors = [
     "aside[aria-label*='advert' i]",
     "[aria-label*='advertisement' i]",
     "[aria-label*='sponsored' i]",
@@ -33,9 +34,14 @@ function preCleanForReadability(doc: Document): void {
     "[class*='adslot' i]",
     "[class*='ad-unit' i]",
     "[class*='adunit' i]",
+    "script",
+    "style",
+    "noscript",
+    "iframe",
+    ".advertisement"
   ];
 
-  const nodes = doc.querySelectorAll(adSelectors.join(", "));
+  const nodes = doc.querySelectorAll(adJunkSelectors.join(", "));
   nodes.forEach((node) => node.remove());
 }
 
@@ -46,6 +52,7 @@ function extractTextWithParagraphs(parsed: ReturnType<Readability["parse"]>): st
   }
 
   const htmlDoc = new DOMParser().parseFromString(contentHtml, "text/html");
+  // Prefer paragraph boundaries when they are available so previews stay readable.
   const paragraphs = Array.from(htmlDoc.querySelectorAll("p"))
     .map((p) => normalizeWhitespace(p.textContent ?? ""))
     .filter(Boolean);
@@ -58,6 +65,7 @@ function extractTextWithParagraphs(parsed: ReturnType<Readability["parse"]>): st
 }
 
 export function extractArticleFromPage(doc: Document = document): ExtractedArticle | null {
+  // Readability mutates the DOM, so work against a cloned document.
   const cloned = doc.cloneNode(true) as Document;
   preCleanForReadability(cloned);
   const parsed = new Readability(cloned).parse();
@@ -70,6 +78,7 @@ export function extractArticleFromPage(doc: Document = document): ExtractedArtic
 
   const title = normalizeWhitespace(parsed?.title || doc.title || "Untitled");
   const excerptSource = normalizeWhitespace(parsed?.excerpt ?? "");
+  // Fall back to a short body snippet when Readability does not provide an excerpt.
   const excerpt = excerptSource || (plainText.length > 280 ? `${plainText.slice(0, 280)}...` : plainText);
 
   return {

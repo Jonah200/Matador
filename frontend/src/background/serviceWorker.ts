@@ -57,6 +57,7 @@ async function getActiveTabId(): Promise<number> {
 }
 
 async function requestExtraction(tabId: number): Promise<ExtractedArticle> {
+  // Ask the content script to extract from the page DOM inside the target tab.
   const response = (await chrome.tabs.sendMessage(tabId, {
     type: MATADOR_EXTRACT_REQUEST,
   })) as ExtractResponseMessage | undefined;
@@ -72,6 +73,7 @@ async function requestExtraction(tabId: number): Promise<ExtractedArticle> {
 }
 
 async function analyzeArticle(article: ExtractedArticle): Promise<unknown> {
+  // Forward the normalized article payload to the local backend for downstream analysis.
   const apiResponse = await fetch("http://localhost:8000/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -87,6 +89,7 @@ async function analyzeArticle(article: ExtractedArticle): Promise<unknown> {
 
 async function analyzeActiveTab(): Promise<AnalyzeResponse> {
   try {
+    // Reuse the same extraction path as the popup to keep analysis inputs consistent.
     const tabId = await getActiveTabId();
     const article = await requestExtraction(tabId);
     const analysis = await analyzeArticle(article);

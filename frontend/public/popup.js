@@ -12,6 +12,7 @@ function setStatus(text) {
 }
 
 function clearOutput() {
+  // Reset the popup before each extraction so stale content never lingers on failure.
   errorEl.textContent = "";
   resultEl.hidden = true;
   metaEl.textContent = "";
@@ -31,6 +32,7 @@ extractBtn.addEventListener("click", async () => {
   setStatus("Extracting...");
 
   try {
+    // Delegate the actual extraction to the background worker so it can reach the active tab.
     const response = await chrome.runtime.sendMessage({
       type: MATADOR_EXTRACT_ACTIVE_TAB,
     });
