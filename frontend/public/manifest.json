@@ -1,16 +1,37 @@
 {
   "manifest_version": 3,
   "name": "Matador",
-  "version": "1.0",
-  "permissions": ["sidePanel"],
+  "version": "0.1.0",
+  "description": "Extract article text from the active tab and analyze it.",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
   "background": {
-    "service_worker": "src/background.js",
+    "service_worker": "src/background/serviceWorker.ts",
     "type": "module"
+  },
+  "action": {
+    "default_title": "Matador"
   },
   "side_panel": {
     "default_path": "index.html"
   },
-  "action": {
-    "default_title": "Click to open panel"
-  }
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content/contentScript.ts"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
 }

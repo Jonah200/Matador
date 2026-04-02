@@ -7,7 +7,6 @@ import SubjectsSection from "./components/SubjectsSection";
 import AnalysisGrid from "./components/AnalysisGrid";
 import BiasHighlightsSection from "./components/BiasHighlightsSection";
 
-import useChromeTabUrl from "./hooks/useChromeTabUrl";
 import useArticleAnalysis from "./hooks/useArticleAnalysis";
 
 import {
@@ -22,8 +21,6 @@ import {
 } from "./utils/analysisHelpers";
 
 function App() {
-  const url = useChromeTabUrl();
-
   const [copied, setCopied] = useState(false);
   const [showBias, setShowBias] = useState(true);
   const [activeSubject, setActiveSubject] = useState("ALL");
@@ -31,15 +28,16 @@ function App() {
   const [showAllSubjects, setShowAllSubjects] = useState(false);
 
   const {
+    article,
     highlights,
     summaryText,
     isAnalyzing,
     errorMsg,
     lastUpdated,
     handleAnalyze,
-  } = useArticleAnalysis(url);
+  } = useArticleAnalysis();
 
-  const domain = useMemo(() => getDomain(url), [url]);
+  const domain = useMemo(() => getDomain(article?.url || ""), [article]);
   const subjects = useMemo(() => getSubjects(highlights), [highlights]);
   const subjectCounts = useMemo(() => getSubjectCounts(highlights), [highlights]);
 
