@@ -1,149 +1,146 @@
-from abc import ABC, abstractmethod
-import asyncio
 import time
-from typing import Dict
-import redis
-import os
+from typing import List, Set
+import redis.asyncio as aioredis
 import json
 
-from app.util.event_bus import EventBus
-from app.util.types import Job, JobStatus, ServiceResult
+from app.util.types import JobMeta
+from app.DTO.Article import Article
 
 # JobStore holds job metadata
-class JobStore(ABC):
-    @abstractmethod
-    async def cleanup(self, completed_ttl: int = 300, maximum_lifetime: int = 600):
-        pass
-    @abstractmethod
-    async def create_job(self, job: Job):
-        pass
-    @abstractmethod
-    async def get_job(self, job_id: str) -> Job:
-        pass
-    @abstractmethod
-    async def update_status(self, job_id: str, status: JobStatus):
-        pass
-    @abstractmethod
-    async def exists(self, job_id: str) -> bool:
-        pass
-    @abstractmethod
-    async def store_result(self, job_id: str, result: ServiceResult) -> bool:
-        pass
+class JobStore:
+    async def create_job(self, job_id: str, article: Article, expected_services: List[str]): ...
 
-class InMemoryJobStore(JobStore):
-    def __init__(self, event_bus: EventBus):
-        self._jobs: Dict[str, Job] = {}
-        self._lock = asyncio.Lock()
-        self._event_bus = event_bus
+    async def get_article(self, job_id: str) -> Article: ...
 
-    async def cleanup(self, completed_ttl: int = 300, maximum_lifetime: int = 600):
-        while True:
-            now = time.time()
+    async def mark_running(self, job_id: str): ...
 
-            async with self._lock:
-                expired = [
-                    job_id
-                    for job_id, job in self._jobs.items()
-                    if (
-                        (job.status == JobStatus.COMPLETE and job.completed_at and now - job.completed_at > completed_ttl)
-                        or (now - job.created_at > maximum_lifetime)
-                    )
-                ]
+    async def add_result(self, job_id: str, service: str, result: dict): ...
 
-            for job_id in expired:
-                del self._jobs[job_id]
-            
-            for job_id in expired:
-                await self._event_bus.delete_channel(job_id)
-        
-            await asyncio.sleep(60)
+    async def mark_failed(self, job_id: str, service: str): ...
 
-    async def create_job(self, job):
-        async with self._lock:
-            self._jobs[job.job_id] = job
+    async def get_job_meta(self, job_id: str) -> JobMeta | None: ...
 
-    async def get_job(self, job_id):
-        async with self._lock:
-            job = self._jobs.get(job_id)
-            if not job:
-                raise KeyError
-            return job
+    async def is_complete(self, job_id: str) -> bool: ...
 
-    async def update_status(self, job_id, status):
-        async with self._lock:
-            job = self._jobs.get(job_id)
-            if not job:
-                return #TODO raise?
-            self._jobs[job_id].status = status
-            if status == JobStatus.COMPLETE:
-                self._jobs[job_id].completed_at = time.time()
-    
-    async def exists(self, job_id):
-        async with self._lock:
-            return job_id in self._jobs
-        
-    async def store_result(self, job_id, result):
-        async with self._lock:
-            job = self._jobs.get(job_id)
-            if not job:
-                return False
-            job.results.append(result)
-        return True
-        
+    async def mark_completed(self, job_id: str): ...
+
+    async def exists(self, job_id: str) -> bool: ...
+
+    async def delete_job(self, job_id: str): ...
+
+    async def get_result(self, job_id: str, service_name: str) -> dict: ...
+
+    async def get_all_jobs(self) -> Set[str]: ...
+
+    async def get_remaining_services(self, job_id: str) -> Set[str]: ...
 class RedisJobStore(JobStore):
-    def __init__(self, event_bus: EventBus, redis: redis.Redis, maximum_lifetime: int = 600, completed_ttl: int = 300):
-        redis_url ="localhost"
-        self._maximum_lifetime = maximum_lifetime
-        self._completed_ttl = completed_ttl
-        self._redis = redis
-        self._event_bus = event_bus
+    def __init__(self, redis: aioredis.Redis):
+        self.redis = redis
 
-    async def initialize(self):
-        await self._redis.ping()
+    def _meta_key(self, job_id: str): return f"job:{job_id}:meta"
+    def _article_key(self, job_id: str): return f"job:{job_id}:article"
+    def _results_key(self, job_id: str): return f"job:{job_id}:results"
+    def _completed_key(self, job_id: str): return f"job:{job_id}:completed"
+    def _failed_key(self, job_id: str): return f"job:{job_id}:failed"
+    def _services_key(self, job_id: str): return f"job:{job_id}:services"
 
-    async def cleanup(self, completed_ttl = 300, maximum_lifetime = 600):
-        """
-        Redis handles cleanup via expire/TTL. This will wait for the job to expire, then delete the results channel.
-        """
-        pubsub = self._redis.pubsub()
-        await pubsub.psubscribe("__keyspace@0__:*")
-        # TODO Make sure REDIS is configured to publish keyspace messages
+    async def create_job(self, job_id, article, expected_services):
+        pipe = self.redis.pipeline(transaction=True)
 
-        async for msg in pubsub.listen():
-            if msg['data'] == 'expired':
-                job_id = msg['channel'].split(":")[-1]
-                await self._event_bus.delete_channel(job_id)
+        pipe.hset(self._meta_key(job_id), mapping={
+            "status": "pending",
+            "created_at": str(time.time()),
+            "expected_services": json.dumps(expected_services),
+            "completed_at": -1
+        })
+
+        pipe.set(self._article_key(job_id), article.model_dump_json())
+        pipe.sadd("job:all", job_id)
+
+        await pipe.execute()
+
+    async def get_article(self, job_id):
+        res = await self.redis.get(self._article_key(job_id))
+        return Article.model_validate(json.loads(res))
     
-    async def create_job(self, job):
-        key = f"job:{job.job_id}"
-        await self._redis.json().set(key, '$', job.to_dict(), nx=True)
-        await self._redis.expire(key, self._maximum_lifetime)
+    async def mark_running(self, job_id):
+        await self.redis.hset(self._meta_key(job_id), "status", "running")
 
-    async def get_job(self, job_id):
-        key = f"job:{job_id}"
-        job_dict = await self._redis.json().get(key)
-        if not job_dict:
-            return # TODO raise?
-        return Job.from_dict(job_dict)
+    async def add_result(self, job_id, service, result):
+        pipe = self.redis.pipeline()
 
-    async def update_status(self, job_id, status):
-        key = f"job:{job_id}"
-        await self._redis.json().set(key, "$.status", status.value, xx=True)
-        if status == JobStatus.COMPLETE:
-            now = time.time()
-            await self._redis.json().set(key, "$.completed_at", now, xx=True)
-            await self._redis.expire(key, self._completed_ttl)
+        pipe.hset(self._results_key(job_id), mapping={
+            service: json.dumps(result)
+        })
+
+        pipe.sadd(self._completed_key(job_id), service)
+
+        await pipe.execute()
+
+    async def get_result(self, job_id, service_name):
+        result = await self.redis.hget(self._results_key(job_id), service_name)
+        return json.loads(result)
+
+    async def mark_failed(self, job_id, service):
+        await self.redis.sadd(self._failed_key(job_id), service)
+
+    async def get_job_meta(self, job_id):
+        data = await self.redis.hgetall(self._meta_key(job_id))
+
+        if not data:
+            return None
+        
+        data['expected_services'] = json.loads(data['expected_services'])
+
+        return JobMeta(job_id=job_id,
+                       status=data['status'],
+                       created_at=float(data['created_at']),
+                       completed_at=float(data['completed_at']),
+                       expected_services=data['expected_services'])
+    
+    async def is_complete(self, job_id):
+        meta = await self.get_job_meta(job_id)
+
+        expected = set(meta.expected_services)
+
+        completed = set(await self.redis.smembers(self._completed_key(job_id)))
+        failed = set(await self.redis.smembers(self._failed_key(job_id)))
+
+        return len(expected) == len(completed) + len(failed)
+    
+    async def mark_completed(self, job_id):
+        pipe = self.redis.pipeline()
+
+        pipe.hset(self._meta_key(job_id), "status", "completed")
+        pipe.hset(self._meta_key(job_id), "completed_at", time.time())
+
+        await pipe.execute()
 
     async def exists(self, job_id):
-        key = f"job:{job_id}"
-        if await self._redis.exists(key):
+        if await self.redis.exists(self._meta_key(job_id)):
             return True
         return False
+    
+    async def delete_job(self, job_id):
+        job_keys = [self._meta_key(job_id), 
+                    self._article_key(job_id), 
+                    self._completed_key(job_id), 
+                    self._failed_key(job_id),
+                    self._results_key(job_id), 
+                    self._services_key(job_id)
+                ]
 
-    async def store_result(self, job_id, result):
-        key = f"job:{job_id}"
-        if await self.exists(job_id):
-            await self._redis.json().arrappend(key, "$.results", result.to_dict())
-            return True
-        else:
-            return False
+        async with self.redis.pipeline(transaction=True) as pipe:
+            pipe.delete(*job_keys)
+            pipe.srem("job:all", job_id)
+            results = await pipe.execute()
+        print(f"Deleted {results[0]} keys")
+    
+    async def get_all_jobs(self):
+        return await self.redis.smembers("job:all")
+    
+    async def get_remaining_services(self, job_id):
+        meta = await self.get_job_meta(job_id)
+        completed_services = await self.redis.smembers(self._completed_key(job_id))
+        failed_services = await self.redis.smembers(self._failed_key(job_id))
+        return set(meta.expected_services).difference(completed_services | failed_services)

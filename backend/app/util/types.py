@@ -66,3 +66,11 @@ class Job:
                   results=[ServiceResult(**res) for res in job_dict['results']],
                   completed_at=job_dict['completed_at'])
         return job
+
+@dataclass
+class JobMeta:
+    job_id: str
+    status: str
+    created_at: float
+    completed_at: float | None
+    expected_services: List[str]

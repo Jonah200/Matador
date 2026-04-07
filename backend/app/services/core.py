@@ -1,123 +1,125 @@
-from abc import ABC, abstractmethod
 from concurrent.futures import Executor
-from typing import List
+from typing import Awaitable, Callable, Dict, List
 import asyncio
 
 from app.util.event_bus import EventBus
 from app.util.job_store import JobStore
-from app.util.types import Job, JobStatus, Paragraph, ServiceResult, ServiceResultCode, ServiceScope
+from app.DTO.Article import Article
 
-class AnalysisService(ABC):
-    """
-    The AnalysisService interface is the base class that all service classes must extend
-    
-    Attributes:
-        name (str): Name of the service
-        scope (ServiceScope): Defines if a service is paragraph or article level
-    """
-    name: str
-    scope: ServiceScope
+class ServiceWorkerManagerInterface:
+    def __init__(
+            self,
+            service_name: str,
+            event_bus: EventBus,
+            job_store: JobStore,
+            process_fn: Callable[[Article], dict],
+            executor: Executor,
+            max_worker: int = 2
+    ):
+        ...
 
-    @abstractmethod
-    def run(self, text: str) -> dict:
-        """Run analysis and return the result as a dict"""
-        pass
+    async def start(self):
+        """Start listening for new jobs"""
 
-# Service Registry
-REGISTERED_SERVICES: List[AnalysisService] = []
+    async def handle_job_created(self, msg: dict):
+        """Callback for handling new jobs"""
 
-# Decorator for registering service classes
-def register_service(cls):
-    REGISTERED_SERVICES.append(cls())
-    return cls
+    async def handle_control_event(self, msg: dict):
+        """Callback for control messages"""
 
-# Runner Function
-async def run_all_services(job_id: str, job_store: JobStore, executor: Executor, event_bus: EventBus):
-    """
-    Run all registered services for a job, streaming results via the EventBus.
-    Works with both ThreadPoolExecutor + InMemoryEventBus and
-    ProcessPoolExecutor + RedisEventBus.
-    """
-    await job_store.update_status(job_id=job_id, status=JobStatus.RUNNING)
-    job: Job = await job_store.get_job(job_id)
-    async def run_service_paragraph(service: AnalysisService, paragraph: Paragraph):
-        loop = asyncio.get_running_loop()
+    async def run_worker(self, job_id: str):
+        """Spawn  an manage a new worker"""
+
+    async def shutdown(self):
+        """Shutdown the service"""
+
+class ServiceWorkerManager(ServiceWorkerManagerInterface):
+    def __init__(self, service_name, event_bus, job_store, process_fn, executor, max_workers = 2):
+        self.service_name = service_name
+        self.event_bus: EventBus = event_bus
+        self.job_store: JobStore = job_store
+        self.process_fn = process_fn
+        self.max_workers = max_workers
+        self.executor = executor
+
+        self.running_jobs: Dict[str, asyncio.Task] = {}
+        self.semaphore = asyncio.Semaphore(max_workers)
+
+    async def start(self):
+        await self.event_bus.subscribe(
+            "job_created",
+            self.handle_job_created,
+            stream=True,
+            consumer_group=self.service_name,
+            consumer_name=f"{self.service_name}_1"
+            )
+        
+        await self.event_bus.subscribe(
+            "job_control",
+            self.handle_control_event
+        )
+        print(f"[SERVICE WORKER MANAGER] Service started: {self.service_name}", flush=True)
+
+    async def handle_job_created(self, msg):
+        job_id = msg["job_id"]
+        expected_services = msg["expected_services"]
+
+        if self.service_name not in expected_services:
+            return
+        
+        if job_id in self.running_jobs:
+            return
+        
+        def _cleanup(t):
+            self.running_jobs.pop(job_id, None)
+            if t.cancelled():
+                print(f"[SERVICE WORKER MANAGER] {self.service_name} cancelled job returned: {job_id}")
+            else:
+                print(f"[SERVICE WORKER MANAGER] {self.service_name} task complete: {job_id}")
+
+
+        task = asyncio.create_task(self.run_worker(job_id))
+
+        task.add_done_callback(_cleanup)
+
+        self.running_jobs[job_id] = task
+
+    async def run_worker(self, job_id):
+        print(f"[SERVICE WORKER MANAGER] processing {self.service_name}: {job_id}", flush=True)
+        article = await self.job_store.get_article(job_id)
         try:
-            # Run service in executor (thread or process)
-            result = await loop.run_in_executor(executor, service.run, paragraph.text)
-
-            service_result = ServiceResult(service_name=service.name,
-                                           service_scope=ServiceScope.PARAGRAPH,
-                                           paragraph_index=paragraph.index,
-                                           result_code=ServiceResultCode.COMPLETE,
-                                           result=result)
-
-            stored = await job_store.store_result(job_id, service_result)
-            if not stored:
-                return
-
-            await event_bus.publish(job_id, service_result)
-
+            async with self.semaphore:
+                    loop = asyncio.get_running_loop()
+                    result = await loop.run_in_executor(self.executor, 
+                                                        self.process_fn,
+                                                        article)
+            await self.job_store.add_result(job_id, self.service_name, result)
+            await self.event_bus.publish(f"job:{job_id}:services", 
+                                   {
+                                       "service_name": self.service_name,
+                                       "status": "completed",
+                                   }, 
+                                    stream=True)
+        
         except Exception as e:
-            service_result = ServiceResult(service_name=service.name,
-                                           service_scope=ServiceScope.PARAGRAPH,
-                                           paragraph_index=paragraph.index,
-                                           result_code=ServiceResultCode.FAILED,
-                                           error=str(e))
-            stored = await job_store.store_result(job_id, service_result)
-            if not stored:
-                return
+            print(f"[SERVICE WORKER MANAGER] ran into an exception {e} while processing a job: {job_id}")
+            await self.job_store.mark_failed(job_id, self.service_name)
+            await self.event_bus.publish(f"job:{job_id}:services", 
+                                   {
+                                       "service_name": self.service_name,
+                                       "status": "failed",
+                                   }, 
+                                    stream=True) 
+        
+    async def handle_control_event(self, msg):
+        job_id = msg.get('job_id')
+        action = msg.get('action')
+        if not job_id:
+            return
+        if action == "timeout":
+            if job_id in self.running_jobs:
+                print(f"[SERVICE WORKER MANAGER] job timeout signal recieved, cancelling job: {job_id}")
+                self.running_jobs[job_id].cancel()
 
-            await event_bus.publish(job_id, service_result)
-
-    async def run_service_article(service: AnalysisService):
-        loop = asyncio.get_running_loop()
-        try:
-            full_text = " ".join([p.text for p in job.paragraphs])
-            result = await loop.run_in_executor(executor, service.run, full_text)
-
-            service_result = ServiceResult(service_name=service.name,
-                                           service_scope=ServiceScope.ARTICLE,
-                                           result_code=ServiceResultCode.COMPLETE,
-                                           result=result)
-
-            stored = await job_store.store_result(job_id, service_result)
-            if not stored:
-                return
-
-            await event_bus.publish(job_id, service_result)
-
-        except Exception as e:
-            service_result = ServiceResult(service_name=service.name,
-                                           service_scope=ServiceScope.PARAGRAPH,
-                                           result_code=ServiceResultCode.FAILED,
-                                           error=str(e))
-            stored = await job_store.store_result(job_id, service_result)
-            if not stored:
-                return
-
-            await event_bus.publish(job_id, service_result)
-
-    # Schedule all tasks
-    tasks = []
-    for service in REGISTERED_SERVICES:
-        print(f"Running {service.name}")
-        if service.scope == ServiceScope.PARAGRAPH:
-            for paragraph in job.paragraphs:
-                tasks.append(asyncio.create_task(run_service_paragraph(service, paragraph)))
-        else:
-            tasks.append(asyncio.create_task(run_service_article(service)))
-
-    # Wait for all tasks to finish
-    # TODO handle failed tasks
-    completed = await asyncio.gather(*tasks, return_exceptions=True)
-    for ret in completed:
-        if isinstance(ret, BaseException):
-            print(f"Error on a service: {ret}", flush=True)
-    await job_store.update_status(job_id, JobStatus.COMPLETE)
-
-    # Publish job completion
-    completion = ServiceResult(service_name="job_complete",
-                               service_scope=ServiceScope.ARTICLE,
-                               result_code=ServiceResultCode.COMPLETE)
-    await event_bus.publish(job_id, completion)
+    async def shutdown(self):
+        pass #TODO

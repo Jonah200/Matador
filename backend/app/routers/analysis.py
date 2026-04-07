@@ -1,15 +1,13 @@
-from concurrent.futures import Executor
+import asyncio
+
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 import uuid
-import asyncio
 import json
 
 from app.DTO.Article import Article
-from app.services.core import run_all_services
 from app.util.event_bus import EventBus
 from app.util.job_store import JobStore
-from app.util.types import Job, Paragraph
 
 router = APIRouter()
 
@@ -17,19 +15,14 @@ router = APIRouter()
 async def analyze(article: Article, request: Request):
     job_id = str(uuid.uuid4())
 
-    job = Job(job_id=job_id,
-              paragraphs=[Paragraph(
-                  index=para['index'],
-                  text=para['text']) 
-                  for para in article.paragraphs])
-
-    executor: Executor = request.app.state.executor
     event_bus: EventBus = request.app.state.event_bus
     job_store: JobStore = request.app.state.job_store
+    expected_services = ["ner_service", "textrank_service"]
+    await job_store.create_job(job_id=job_id,
+                               article=article,
+                               expected_services=expected_services) #TODO Change from hardcoded to dynamic expected_services
 
-    await job_store.create_job(job)
-
-    asyncio.create_task(run_all_services(job_id, job_store, executor, event_bus))
+    await event_bus.publish("job_created", {"job_id": job_id, "expected_services": expected_services}, stream=True, maxlen=1000)
 
     return {"job_id": job_id}
 
@@ -58,14 +51,42 @@ async def stream_job(job_id: str, request: Request):
     if not await job_store.exists(job_id):
         raise HTTPException(status_code=404, detail="job_id not found")
 
+    queue = asyncio.Queue()
+
+    async def callback(data: dict):
+        await queue.put(data)
+
+    await event_bus.subscribe(f"job:{job_id}:services", 
+                        callback, 
+                        stream=True, 
+                        consumer_group="main_server", 
+                        consumer_name="main_server_1",
+                        catchup=True)
+    
     async def event_generator():
         try:
-            async for event in event_bus.subscribe(job_id):
-                yield f"data: {json.dumps(event.to_dict())}\n\n"
-                if event.service_name == "job_complete":
+            while True:
+                try:
+                    event = await asyncio.wait_for(queue.get(), timeout=0.5)
+                except asyncio.TimeoutError:
+                    if await request.is_disconnected():
+                        break
+                    continue
+                result = None
+                if event.get("status") == "completed":
+                    result = await job_store.get_result(job_id, event.get("service_name"))
+                elif event.get("status") == "failed":
+                    result = "failed" #TODO Handle this better
+
+                yield f"data: {json.dumps({"service_name": event.get("service_name"), "result": result})}\n\n"
+
+                if event.get("service_name") == "job_complete":
                     break
 
         except Exception as e:
             print(f"Error: {e}")
+
+        finally:
+            await event_bus.unsubscribe(f"job:{job_id}:services")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

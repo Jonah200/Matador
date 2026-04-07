@@ -16,7 +16,6 @@ def get_articles(keywords):
     conn.request("POST", "/search", payload, headers)
     res = conn.getresponse()
     data = res.read()
-    print(data.decode("utf-8"))
 
     return json.loads(data)
 
