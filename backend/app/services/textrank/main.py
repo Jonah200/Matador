@@ -1,5 +1,8 @@
 import asyncio
 
+from app.util.logging_config import setup_logging
+setup_logging()
+
 from app.util.event_bus import RedisEventBus
 from app.util.job_store import RedisJobStore
 

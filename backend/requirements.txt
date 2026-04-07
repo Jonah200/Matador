@@ -5,6 +5,7 @@ spacy[transformers]
 pandas
 scikit-learn
 
+loguru
 python-dotenv
 pydantic-settings
 

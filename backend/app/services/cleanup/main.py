@@ -4,6 +4,9 @@ from app.util.job_store import RedisJobStore
 import asyncio
 import redis.asyncio as aioredis
 from dotenv import load_dotenv
+from app.util.logging_config import setup_logging
+setup_logging()
+from loguru import logger
 load_dotenv()
 import os
 
@@ -23,7 +26,7 @@ async def main():
     event_bus = RedisEventBus(redis_client)
     job_store = RedisJobStore(redis_client)
 
-    print("[CLEANUP] Starting Cleanup Service")
+    logger.info("[CLEANUP] Starting Cleanup Service")
     await cleanup_loop(event_bus=event_bus,job_store=job_store)
 
 if __name__ == "__main__":

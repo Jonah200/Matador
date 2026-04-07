@@ -134,7 +134,6 @@ class RedisJobStore(JobStore):
             pipe.delete(*job_keys)
             pipe.srem("job:all", job_id)
             results = await pipe.execute()
-        print(f"Deleted {results[0]} keys")
     
     async def get_all_jobs(self):
         return await self.redis.smembers("job:all")

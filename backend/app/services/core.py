@@ -1,6 +1,7 @@
 from concurrent.futures import Executor
-from typing import Awaitable, Callable, Dict, List
+from typing import Callable, Dict
 import asyncio
+from loguru import logger
 
 from app.util.event_bus import EventBus
 from app.util.job_store import JobStore
@@ -30,6 +31,7 @@ class ServiceWorkerManagerInterface:
     async def run_worker(self, job_id: str):
         """Spawn  an manage a new worker"""
 
+    # TODO Is this needed?
     async def shutdown(self):
         """Shutdown the service"""
 
@@ -58,7 +60,7 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
             "job_control",
             self.handle_control_event
         )
-        print(f"[SERVICE WORKER MANAGER] Service started: {self.service_name}", flush=True)
+        logger.info(f"[SERVICE WORKER MANAGER] Service started: {self.service_name}", flush=True)
 
     async def handle_job_created(self, msg):
         job_id = msg["job_id"]
@@ -73,9 +75,9 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
         def _cleanup(t):
             self.running_jobs.pop(job_id, None)
             if t.cancelled():
-                print(f"[SERVICE WORKER MANAGER] {self.service_name} cancelled job returned: {job_id}")
+                logger.trace(f"[SERVICE WORKER MANAGER] {self.service_name} cancelled job returned: {job_id}")
             else:
-                print(f"[SERVICE WORKER MANAGER] {self.service_name} task complete: {job_id}")
+                logger.trace(f"[SERVICE WORKER MANAGER] {self.service_name} task complete: {job_id}")
 
 
         task = asyncio.create_task(self.run_worker(job_id))
@@ -85,7 +87,7 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
         self.running_jobs[job_id] = task
 
     async def run_worker(self, job_id):
-        print(f"[SERVICE WORKER MANAGER] processing {self.service_name}: {job_id}", flush=True)
+        logger.trace(f"[SERVICE WORKER MANAGER] processing {self.service_name}: {job_id}", flush=True)
         article = await self.job_store.get_article(job_id)
         try:
             async with self.semaphore:
@@ -102,7 +104,7 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
                                     stream=True)
         
         except Exception as e:
-            print(f"[SERVICE WORKER MANAGER] ran into an exception {e} while processing a job: {job_id}")
+            logger.warning(f"[SERVICE WORKER MANAGER] ran into an exception {e} while processing a job: {job_id}")
             await self.job_store.mark_failed(job_id, self.service_name)
             await self.event_bus.publish(f"job:{job_id}:services", 
                                    {
@@ -118,7 +120,7 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
             return
         if action == "timeout":
             if job_id in self.running_jobs:
-                print(f"[SERVICE WORKER MANAGER] job timeout signal recieved, cancelling job: {job_id}")
+                logger.trace(f"[SERVICE WORKER MANAGER] job timeout signal recieved, cancelling job: {job_id}")
                 self.running_jobs[job_id].cancel()
 
     async def shutdown(self):
