@@ -1,0 +1,908 @@
+[
+    {
+        "text": "Alfredo Alejandro Aljorna",
+        "label": "PERSON",
+        "start_char": 0,
+        "end_char": 25
+    },
+    {
+        "text": "Minneapolis",
+        "label": "GPE",
+        "start_char": 42,
+        "end_char": 53
+    },
+    {
+        "text": "a Wednesday evening",
+        "label": "TIME",
+        "start_char": 57,
+        "end_char": 76
+    },
+    {
+        "text": "last month",
+        "label": "DATE",
+        "start_char": 77,
+        "end_char": 87
+    },
+    {
+        "text": "DoorDash",
+        "label": "ORG",
+        "start_char": 112,
+        "end_char": 120
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 171,
+        "end_char": 174
+    },
+    {
+        "text": "Julio Cesar Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 300,
+        "end_char": 322
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 403,
+        "end_char": 413
+    },
+    {
+        "text": "Immigration and Customs Enforcement",
+        "label": "ORG",
+        "start_char": 448,
+        "end_char": 483
+    },
+    {
+        "text": "just seven days",
+        "label": "DATE",
+        "start_char": 499,
+        "end_char": 514
+    },
+    {
+        "text": "Renee Good",
+        "label": "PERSON",
+        "start_char": 550,
+        "end_char": 560
+    },
+    {
+        "text": "the Department of Homeland Security",
+        "label": "ORG",
+        "start_char": 662,
+        "end_char": 697
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 762,
+        "end_char": 765
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 796,
+        "end_char": 799
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 808,
+        "end_char": 818
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 847,
+        "end_char": 854
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 979,
+        "end_char": 982
+    },
+    {
+        "text": "the US",
+        "label": "ORG",
+        "start_char": 1001,
+        "end_char": 1007
+    },
+    {
+        "text": "Department of Justice",
+        "label": "ORG",
+        "start_char": 1008,
+        "end_char": 1029
+    },
+    {
+        "text": "January 16",
+        "label": "DATE",
+        "start_char": 1036,
+        "end_char": 1046
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 1100,
+        "end_char": 1103
+    },
+    {
+        "text": "DOJ",
+        "label": "ORG",
+        "start_char": 1113,
+        "end_char": 1116
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 1126,
+        "end_char": 1133
+    },
+    {
+        "text": "the Justice Department",
+        "label": "ORG",
+        "start_char": 1192,
+        "end_char": 1214
+    },
+    {
+        "text": "Thursday",
+        "label": "DATE",
+        "start_char": 1218,
+        "end_char": 1226
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 1287,
+        "end_char": 1290
+    },
+    {
+        "text": "Venezuelan",
+        "label": "NORP",
+        "start_char": 1291,
+        "end_char": 1301
+    },
+    {
+        "text": "DOJ",
+        "label": "ORG",
+        "start_char": 1318,
+        "end_char": 1321
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 1398,
+        "end_char": 1401
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 1491,
+        "end_char": 1494
+    },
+    {
+        "text": "the Justice Department",
+        "label": "ORG",
+        "start_char": 1566,
+        "end_char": 1588
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 1684,
+        "end_char": 1687
+    },
+    {
+        "text": "Todd Lyons",
+        "label": "PERSON",
+        "start_char": 1697,
+        "end_char": 1707
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 1733,
+        "end_char": 1736
+    },
+    {
+        "text": "Lyons",
+        "label": "PERSON",
+        "start_char": 1802,
+        "end_char": 1807
+    },
+    {
+        "text": "DOJ",
+        "label": "ORG",
+        "start_char": 1814,
+        "end_char": 1817
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 2140,
+        "end_char": 2143
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 2163,
+        "end_char": 2166
+    },
+    {
+        "text": "DOJ",
+        "label": "ORG",
+        "start_char": 2300,
+        "end_char": 2303
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 2356,
+        "end_char": 2359
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 2491,
+        "end_char": 2498
+    },
+    {
+        "text": "Frederick J. Goetz",
+        "label": "PERSON",
+        "start_char": 2511,
+        "end_char": 2529
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 2769,
+        "end_char": 2772
+    },
+    {
+        "text": "Elie Honig",
+        "label": "PERSON",
+        "start_char": 2794,
+        "end_char": 2804
+    },
+    {
+        "text": "Good",
+        "label": "PERSON",
+        "start_char": 2872,
+        "end_char": 2876
+    },
+    {
+        "text": "Alex Pretti",
+        "label": "PERSON",
+        "start_char": 2881,
+        "end_char": 2892
+    },
+    {
+        "text": "last year",
+        "label": "DATE",
+        "start_char": 3001,
+        "end_char": 3010
+    },
+    {
+        "text": "Marimar Martinez",
+        "label": "PERSON",
+        "start_char": 3041,
+        "end_char": 3057
+    },
+    {
+        "text": "Chicago",
+        "label": "GPE",
+        "start_char": 3061,
+        "end_char": 3068
+    },
+    {
+        "text": "Martinez",
+        "label": "PERSON",
+        "start_char": 3287,
+        "end_char": 3295
+    },
+    {
+        "text": "last year",
+        "label": "DATE",
+        "start_char": 3296,
+        "end_char": 3305
+    },
+    {
+        "text": "Martinez",
+        "label": "PERSON",
+        "start_char": 3308,
+        "end_char": 3316
+    },
+    {
+        "text": "last week",
+        "label": "DATE",
+        "start_char": 3384,
+        "end_char": 3393
+    },
+    {
+        "text": "Martinez",
+        "label": "PERSON",
+        "start_char": 3418,
+        "end_char": 3426
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 3603,
+        "end_char": 3606
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 3709,
+        "end_char": 3719
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 3724,
+        "end_char": 3731
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 3765,
+        "end_char": 3770
+    },
+    {
+        "text": "Honig",
+        "label": "PERSON",
+        "start_char": 4004,
+        "end_char": 4009
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 4034,
+        "end_char": 4044
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 4049,
+        "end_char": 4056
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 4159,
+        "end_char": 4162
+    },
+    {
+        "text": "January 15",
+        "label": "DATE",
+        "start_char": 4228,
+        "end_char": 4238
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 4253,
+        "end_char": 4256
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 4295,
+        "end_char": 4305
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 4330,
+        "end_char": 4337
+    },
+    {
+        "text": "January 14",
+        "label": "DATE",
+        "start_char": 4391,
+        "end_char": 4401
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 4490,
+        "end_char": 4500
+    },
+    {
+        "text": "one",
+        "label": "CARDINAL",
+        "start_char": 4551,
+        "end_char": 4554
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 4579,
+        "end_char": 4582
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 4750,
+        "end_char": 4753
+    },
+    {
+        "text": "Two",
+        "label": "CARDINAL",
+        "start_char": 4760,
+        "end_char": 4763
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 4852,
+        "end_char": 4855
+    },
+    {
+        "text": "Kristi Noem",
+        "label": "PERSON",
+        "start_char": 4866,
+        "end_char": 4877
+    },
+    {
+        "text": "a few days",
+        "label": "DATE",
+        "start_char": 5001,
+        "end_char": 5011
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 5049,
+        "end_char": 5052
+    },
+    {
+        "text": "January 16",
+        "label": "DATE",
+        "start_char": 5057,
+        "end_char": 5067
+    },
+    {
+        "text": "the Justice Department",
+        "label": "ORG",
+        "start_char": 5078,
+        "end_char": 5100
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 5211,
+        "end_char": 5221
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5226,
+        "end_char": 5233
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5280,
+        "end_char": 5287
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5376,
+        "end_char": 5383
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 5462,
+        "end_char": 5465
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 5514,
+        "end_char": 5524
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5529,
+        "end_char": 5536
+    },
+    {
+        "text": "one",
+        "label": "CARDINAL",
+        "start_char": 5561,
+        "end_char": 5564
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 5645,
+        "end_char": 5648
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 5714,
+        "end_char": 5724
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5729,
+        "end_char": 5736
+    },
+    {
+        "text": "one",
+        "label": "CARDINAL",
+        "start_char": 5765,
+        "end_char": 5768
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 5821,
+        "end_char": 5824
+    },
+    {
+        "text": "DOJ",
+        "label": "ORG",
+        "start_char": 5910,
+        "end_char": 5913
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 5932,
+        "end_char": 5939
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 5956,
+        "end_char": 5959
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 5964,
+        "end_char": 5969
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 6009,
+        "end_char": 6019
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 6091,
+        "end_char": 6101
+    },
+    {
+        "text": "Facebook",
+        "label": "ORG",
+        "start_char": 6162,
+        "end_char": 6170
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 6324,
+        "end_char": 6331
+    },
+    {
+        "text": "Good",
+        "label": "PERSON",
+        "start_char": 6385,
+        "end_char": 6389
+    },
+    {
+        "text": "the week prior",
+        "label": "DATE",
+        "start_char": 6390,
+        "end_char": 6404
+    },
+    {
+        "text": "Goetz",
+        "label": "PERSON",
+        "start_char": 6460,
+        "end_char": 6465
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 6481,
+        "end_char": 6488
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 6565,
+        "end_char": 6572
+    },
+    {
+        "text": "Goetz",
+        "label": "PERSON",
+        "start_char": 6643,
+        "end_char": 6648
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 6655,
+        "end_char": 6662
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 6686,
+        "end_char": 6689
+    },
+    {
+        "text": "just 10 feet",
+        "label": "QUANTITY",
+        "start_char": 6724,
+        "end_char": 6736
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 6763,
+        "end_char": 6773
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 6844,
+        "end_char": 6851
+    },
+    {
+        "text": "Goetz",
+        "label": "PERSON",
+        "start_char": 6951,
+        "end_char": 6956
+    },
+    {
+        "text": "two",
+        "label": "CARDINAL",
+        "start_char": 7061,
+        "end_char": 7064
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 7185,
+        "end_char": 7188
+    },
+    {
+        "text": "One",
+        "label": "CARDINAL",
+        "start_char": 7202,
+        "end_char": 7205
+    },
+    {
+        "text": "Sosa",
+        "label": "PERSON",
+        "start_char": 7242,
+        "end_char": 7246
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 7278,
+        "end_char": 7281
+    },
+    {
+        "text": "Alicia Celis",
+        "label": "PERSON",
+        "start_char": 7361,
+        "end_char": 7373
+    },
+    {
+        "text": "Sosa-Celis’",
+        "label": "PERSON",
+        "start_char": 7375,
+        "end_char": 7386
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 7408,
+        "end_char": 7411
+    },
+    {
+        "text": "one",
+        "label": "CARDINAL",
+        "start_char": 7417,
+        "end_char": 7420
+    },
+    {
+        "text": "Sosa-Celis’",
+        "label": "PERSON",
+        "start_char": 7433,
+        "end_char": 7444
+    },
+    {
+        "text": "Julio",
+        "label": "PERSON",
+        "start_char": 7460,
+        "end_char": 7465
+    },
+    {
+        "text": "Alfredo",
+        "label": "PERSON",
+        "start_char": 7499,
+        "end_char": 7506
+    },
+    {
+        "text": "Julio",
+        "label": "PERSON",
+        "start_char": 7596,
+        "end_char": 7601
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 7680,
+        "end_char": 7683
+    },
+    {
+        "text": "more than a dozen",
+        "label": "CARDINAL",
+        "start_char": 7912,
+        "end_char": 7929
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 7960,
+        "end_char": 7963
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 7981,
+        "end_char": 7988
+    },
+    {
+        "text": "Mabel Aljorna",
+        "label": "PERSON",
+        "start_char": 7998,
+        "end_char": 8011
+    },
+    {
+        "text": "Julio",
+        "label": "PERSON",
+        "start_char": 8059,
+        "end_char": 8064
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 8117,
+        "end_char": 8127
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "PERSON",
+        "start_char": 8342,
+        "end_char": 8352
+    },
+    {
+        "text": "Robin Wolpert",
+        "label": "PERSON",
+        "start_char": 8420,
+        "end_char": 8433
+    },
+    {
+        "text": "ICE",
+        "label": "ORG",
+        "start_char": 8508,
+        "end_char": 8511
+    },
+    {
+        "text": "Renee Good",
+        "label": "PERSON",
+        "start_char": 8764,
+        "end_char": 8774
+    },
+    {
+        "text": "three",
+        "label": "CARDINAL",
+        "start_char": 8788,
+        "end_char": 8793
+    },
+    {
+        "text": "Alex Pretti",
+        "label": "PERSON",
+        "start_char": 8946,
+        "end_char": 8957
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 9099,
+        "end_char": 9104
+    },
+    {
+        "text": "Pretti",
+        "label": "PERSON",
+        "start_char": 9174,
+        "end_char": 9180
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 9236,
+        "end_char": 9239
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 9391,
+        "end_char": 9394
+    },
+    {
+        "text": "Honig",
+        "label": "PERSON",
+        "start_char": 9409,
+        "end_char": 9414
+    },
+    {
+        "text": "DHS",
+        "label": "ORG",
+        "start_char": 9549,
+        "end_char": 9552
+    },
+    {
+        "text": "Honig",
+        "label": "PERSON",
+        "start_char": 9611,
+        "end_char": 9616
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 9624,
+        "end_char": 9629
+    },
+    {
+        "text": "CNN",
+        "label": "ORG",
+        "start_char": 9957,
+        "end_char": 9960
+    },
+    {
+        "text": "Sosa-Celis",
+        "label": "ORG",
+        "start_char": 10025,
+        "end_char": 10035
+    },
+    {
+        "text": "Aljorna",
+        "label": "PERSON",
+        "start_char": 10040,
+        "end_char": 10047
+    },
+    {
+        "text": "Honig",
+        "label": "PERSON",
+        "start_char": 10093,
+        "end_char": 10098
+    },
+    {
+        "text": "Honig",
+        "label": "PERSON",
+        "start_char": 10427,
+        "end_char": 10432
+    },
+    {
+        "text": "the Justice Department",
+        "label": "ORG",
+        "start_char": 10527,
+        "end_char": 10549
+    }
+]

@@ -1,0 +1,896 @@
+[
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 10,
+        "end_char": 15
+    },
+    {
+        "text": "Venzuela",
+        "label": "GPE",
+        "start_char": 40,
+        "end_char": 48
+    },
+    {
+        "text": "Lake Maracaibo",
+        "label": "LOC",
+        "start_char": 156,
+        "end_char": 170
+    },
+    {
+        "text": "CABIMAS",
+        "label": "GPE",
+        "start_char": 265,
+        "end_char": 272
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 274,
+        "end_char": 283
+    },
+    {
+        "text": "Earth",
+        "label": "LOC",
+        "start_char": 338,
+        "end_char": 343
+    },
+    {
+        "text": "Manuel Polanco",
+        "label": "PERSON",
+        "start_char": 699,
+        "end_char": 713
+    },
+    {
+        "text": "74",
+        "label": "DATE",
+        "start_char": 715,
+        "end_char": 717
+    },
+    {
+        "text": "today",
+        "label": "DATE",
+        "start_char": 920,
+        "end_char": 925
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 929,
+        "end_char": 938
+    },
+    {
+        "text": "Maracaibo Basin",
+        "label": "LOC",
+        "start_char": 941,
+        "end_char": 956
+    },
+    {
+        "text": "the last century",
+        "label": "DATE",
+        "start_char": 977,
+        "end_char": 993
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1059,
+        "end_char": 1063
+    },
+    {
+        "text": "last month",
+        "label": "DATE",
+        "start_char": 1071,
+        "end_char": 1081
+    },
+    {
+        "text": "Nicolás Maduro",
+        "label": "PERSON",
+        "start_char": 1106,
+        "end_char": 1120
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 1145,
+        "end_char": 1150
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 1252,
+        "end_char": 1269
+    },
+    {
+        "text": "Maracaibo",
+        "label": "LOC",
+        "start_char": 1279,
+        "end_char": 1288
+    },
+    {
+        "text": "the Orinoco Belt",
+        "label": "LOC",
+        "start_char": 1294,
+        "end_char": 1310
+    },
+    {
+        "text": "more than 300 billion barrels",
+        "label": "QUANTITY",
+        "start_char": 1370,
+        "end_char": 1399
+    },
+    {
+        "text": "Maracaibo",
+        "label": "LOC",
+        "start_char": 1432,
+        "end_char": 1441
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 1465,
+        "end_char": 1474
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 1649,
+        "end_char": 1653
+    },
+    {
+        "text": "José Celestino García Petro",
+        "label": "PERSON",
+        "start_char": 1844,
+        "end_char": 1871
+    },
+    {
+        "text": "66",
+        "label": "DATE",
+        "start_char": 1873,
+        "end_char": 1875
+    },
+    {
+        "text": "eight",
+        "label": "CARDINAL",
+        "start_char": 1892,
+        "end_char": 1897
+    },
+    {
+        "text": "years ago",
+        "label": "DATE",
+        "start_char": 2000,
+        "end_char": 2009
+    },
+    {
+        "text": "the 1970s",
+        "label": "DATE",
+        "start_char": 2051,
+        "end_char": 2060
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 2062,
+        "end_char": 2071
+    },
+    {
+        "text": "daily",
+        "label": "DATE",
+        "start_char": 2076,
+        "end_char": 2081
+    },
+    {
+        "text": "some 3.5 million barrels",
+        "label": "QUANTITY",
+        "start_char": 2090,
+        "end_char": 2114
+    },
+    {
+        "text": "the Organization of the Petroleum Exporting Countries",
+        "label": "ORG",
+        "start_char": 2136,
+        "end_char": 2189
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 2404,
+        "end_char": 2408
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 2429,
+        "end_char": 2438
+    },
+    {
+        "text": "Last year",
+        "label": "DATE",
+        "start_char": 2503,
+        "end_char": 2512
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 2514,
+        "end_char": 2523
+    },
+    {
+        "text": "about 1 million barrels",
+        "label": "QUANTITY",
+        "start_char": 2540,
+        "end_char": 2563
+    },
+    {
+        "text": "less than 1%",
+        "label": "PERCENT",
+        "start_char": 2571,
+        "end_char": 2583
+    },
+    {
+        "text": "more than a decade",
+        "label": "DATE",
+        "start_char": 2668,
+        "end_char": 2686
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 2810,
+        "end_char": 2814
+    },
+    {
+        "text": "Energy",
+        "label": "ORG",
+        "start_char": 2815,
+        "end_char": 2821
+    },
+    {
+        "text": "Chris Wright",
+        "label": "PERSON",
+        "start_char": 2832,
+        "end_char": 2844
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 2853,
+        "end_char": 2862
+    },
+    {
+        "text": "last week",
+        "label": "DATE",
+        "start_char": 2863,
+        "end_char": 2872
+    },
+    {
+        "text": "Delcy Rodríguez",
+        "label": "PERSON",
+        "start_char": 2916,
+        "end_char": 2931
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 3053,
+        "end_char": 3057
+    },
+    {
+        "text": "at least a decade",
+        "label": "DATE",
+        "start_char": 3142,
+        "end_char": 3159
+    },
+    {
+        "text": "$200 billion",
+        "label": "MONEY",
+        "start_char": 3174,
+        "end_char": 3186
+    },
+    {
+        "text": "White House",
+        "label": "ORG",
+        "start_char": 3334,
+        "end_char": 3345
+    },
+    {
+        "text": "last month",
+        "label": "DATE",
+        "start_char": 3354,
+        "end_char": 3364
+    },
+    {
+        "text": "ExxonMobil",
+        "label": "ORG",
+        "start_char": 3366,
+        "end_char": 3376
+    },
+    {
+        "text": "Darren Woods",
+        "label": "PERSON",
+        "start_char": 3381,
+        "end_char": 3393
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 3402,
+        "end_char": 3411
+    },
+    {
+        "text": "Lake Maracaibo",
+        "label": "LOC",
+        "start_char": 3461,
+        "end_char": 3475
+    },
+    {
+        "text": "Caribbean",
+        "label": "LOC",
+        "start_char": 3551,
+        "end_char": 3560
+    },
+    {
+        "text": "every day",
+        "label": "DATE",
+        "start_char": 3885,
+        "end_char": 3894
+    },
+    {
+        "text": "Joel José León Santo",
+        "label": "PERSON",
+        "start_char": 3941,
+        "end_char": 3961
+    },
+    {
+        "text": "53",
+        "label": "DATE",
+        "start_char": 3963,
+        "end_char": 3965
+    },
+    {
+        "text": "a recent morning",
+        "label": "DATE",
+        "start_char": 3974,
+        "end_char": 3990
+    },
+    {
+        "text": "three",
+        "label": "CARDINAL",
+        "start_char": 4027,
+        "end_char": 4032
+    },
+    {
+        "text": "Tomorrow",
+        "label": "DATE",
+        "start_char": 4115,
+        "end_char": 4123
+    },
+    {
+        "text": "today",
+        "label": "DATE",
+        "start_char": 4142,
+        "end_char": 4147
+    },
+    {
+        "text": "fewer than 2,000",
+        "label": "CARDINAL",
+        "start_char": 4224,
+        "end_char": 4240
+    },
+    {
+        "text": "some 12,000",
+        "label": "CARDINAL",
+        "start_char": 4291,
+        "end_char": 4302
+    },
+    {
+        "text": "Mari Camacho",
+        "label": "PERSON",
+        "start_char": 4352,
+        "end_char": 4364
+    },
+    {
+        "text": "45",
+        "label": "DATE",
+        "start_char": 4366,
+        "end_char": 4368
+    },
+    {
+        "text": "El Güere",
+        "label": "GPE",
+        "start_char": 4463,
+        "end_char": 4471
+    },
+    {
+        "text": "Lake Maracaibo",
+        "label": "LOC",
+        "start_char": 4522,
+        "end_char": 4536
+    },
+    {
+        "text": "four",
+        "label": "CARDINAL",
+        "start_char": 4610,
+        "end_char": 4614
+    },
+    {
+        "text": "Colombia",
+        "label": "GPE",
+        "start_char": 4629,
+        "end_char": 4637
+    },
+    {
+        "text": "Camacho",
+        "label": "PERSON",
+        "start_char": 4716,
+        "end_char": 4723
+    },
+    {
+        "text": "six years",
+        "label": "DATE",
+        "start_char": 4763,
+        "end_char": 4772
+    },
+    {
+        "text": "About 10 miles",
+        "label": "QUANTITY",
+        "start_char": 4971,
+        "end_char": 4985
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 5018,
+        "end_char": 5025
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 5046,
+        "end_char": 5055
+    },
+    {
+        "text": "Hollister Quintero",
+        "label": "PERSON",
+        "start_char": 5335,
+        "end_char": 5353
+    },
+    {
+        "text": "32",
+        "label": "DATE",
+        "start_char": 5355,
+        "end_char": 5357
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 5361,
+        "end_char": 5368
+    },
+    {
+        "text": "days",
+        "label": "DATE",
+        "start_char": 5452,
+        "end_char": 5456
+    },
+    {
+        "text": "Quintero",
+        "label": "PERSON",
+        "start_char": 5492,
+        "end_char": 5500
+    },
+    {
+        "text": "2",
+        "label": "MONEY",
+        "start_char": 5677,
+        "end_char": 5678
+    },
+    {
+        "text": "Quintero",
+        "label": "PERSON",
+        "start_char": 5720,
+        "end_char": 5728
+    },
+    {
+        "text": "centuries",
+        "label": "DATE",
+        "start_char": 5940,
+        "end_char": 5949
+    },
+    {
+        "text": "Lake Maracaibo’s",
+        "label": "LOC",
+        "start_char": 5951,
+        "end_char": 5967
+    },
+    {
+        "text": "Los Angeles’",
+        "label": "GPE",
+        "start_char": 6097,
+        "end_char": 6109
+    },
+    {
+        "text": "La Brea Tar Pits",
+        "label": "LOC",
+        "start_char": 6110,
+        "end_char": 6126
+    },
+    {
+        "text": "Spanish",
+        "label": "NORP",
+        "start_char": 6150,
+        "end_char": 6157
+    },
+    {
+        "text": "the oil age",
+        "label": "DATE",
+        "start_char": 6257,
+        "end_char": 6268
+    },
+    {
+        "text": "the mid-19th and early 20th centuries",
+        "label": "DATE",
+        "start_char": 6272,
+        "end_char": 6309
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 6399,
+        "end_char": 6416
+    },
+    {
+        "text": "Europe",
+        "label": "LOC",
+        "start_char": 6421,
+        "end_char": 6427
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 6513,
+        "end_char": 6520
+    },
+    {
+        "text": "more than a century ago",
+        "label": "DATE",
+        "start_char": 6528,
+        "end_char": 6551
+    },
+    {
+        "text": "Barroso II",
+        "label": "FAC",
+        "start_char": 6566,
+        "end_char": 6576
+    },
+    {
+        "text": "Dec. 14, 1922",
+        "label": "DATE",
+        "start_char": 6602,
+        "end_char": 6615
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 6637,
+        "end_char": 6644
+    },
+    {
+        "text": "Barroso II",
+        "label": "FAC",
+        "start_char": 6675,
+        "end_char": 6685
+    },
+    {
+        "text": "Royal Dutch Shell",
+        "label": "ORG",
+        "start_char": 6698,
+        "end_char": 6715
+    },
+    {
+        "text": "some 100,000 barrels",
+        "label": "QUANTITY",
+        "start_char": 6740,
+        "end_char": 6760
+    },
+    {
+        "text": "daily",
+        "label": "DATE",
+        "start_char": 6761,
+        "end_char": 6766
+    },
+    {
+        "text": "200 feet",
+        "label": "QUANTITY",
+        "start_char": 6843,
+        "end_char": 6851
+    },
+    {
+        "text": "Orlando Méndez",
+        "label": "PERSON",
+        "start_char": 6922,
+        "end_char": 6936
+    },
+    {
+        "text": "Venezuelan",
+        "label": "NORP",
+        "start_char": 6940,
+        "end_char": 6950
+    },
+    {
+        "text": "2022",
+        "label": "DATE",
+        "start_char": 6977,
+        "end_char": 6981
+    },
+    {
+        "text": "the American Assn. of Petroleum Geologists",
+        "label": "ORG",
+        "start_char": 6994,
+        "end_char": 7036
+    },
+    {
+        "text": "centennial",
+        "label": "DATE",
+        "start_char": 7060,
+        "end_char": 7070
+    },
+    {
+        "text": "Méndez",
+        "label": "PERSON",
+        "start_char": 7117,
+        "end_char": 7123
+    },
+    {
+        "text": "Petróleo",
+        "label": "PERSON",
+        "start_char": 7322,
+        "end_char": 7330
+    },
+    {
+        "text": "nine days",
+        "label": "DATE",
+        "start_char": 7382,
+        "end_char": 7391
+    },
+    {
+        "text": "Lake Maracaibo",
+        "label": "LOC",
+        "start_char": 7496,
+        "end_char": 7510
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 7664,
+        "end_char": 7673
+    },
+    {
+        "text": "Maracaibo",
+        "label": "LOC",
+        "start_char": 7721,
+        "end_char": 7730
+    },
+    {
+        "text": "Méndez",
+        "label": "PERSON",
+        "start_char": 7829,
+        "end_char": 7835
+    },
+    {
+        "text": "subsequent decades",
+        "label": "DATE",
+        "start_char": 7847,
+        "end_char": 7865
+    },
+    {
+        "text": "Venezuela",
+        "label": "GPE",
+        "start_char": 7867,
+        "end_char": 7876
+    },
+    {
+        "text": "the late-1990s returned to producing",
+        "label": "DATE",
+        "start_char": 7912,
+        "end_char": 7948
+    },
+    {
+        "text": "3 million barrels",
+        "label": "QUANTITY",
+        "start_char": 7971,
+        "end_char": 7988
+    },
+    {
+        "text": "Hugo Chávez",
+        "label": "PERSON",
+        "start_char": 8038,
+        "end_char": 8049
+    },
+    {
+        "text": "Venezuelan",
+        "label": "NORP",
+        "start_char": 8090,
+        "end_char": 8100
+    },
+    {
+        "text": "2002-03",
+        "label": "DATE",
+        "start_char": 8190,
+        "end_char": 8197
+    },
+    {
+        "text": "Chávez",
+        "label": "PERSON",
+        "start_char": 8207,
+        "end_char": 8213
+    },
+    {
+        "text": "almost 20,000",
+        "label": "CARDINAL",
+        "start_char": 8222,
+        "end_char": 8235
+    },
+    {
+        "text": "Years later",
+        "label": "DATE",
+        "start_char": 8270,
+        "end_char": 8281
+    },
+    {
+        "text": "Chávez",
+        "label": "PERSON",
+        "start_char": 8283,
+        "end_char": 8289
+    },
+    {
+        "text": "dozens",
+        "label": "CARDINAL",
+        "start_char": 8303,
+        "end_char": 8309
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 8343,
+        "end_char": 8347
+    },
+    {
+        "text": "Chávez",
+        "label": "PERSON",
+        "start_char": 8539,
+        "end_char": 8545
+    },
+    {
+        "text": "2013",
+        "label": "DATE",
+        "start_char": 8554,
+        "end_char": 8558
+    },
+    {
+        "text": "Maduro",
+        "label": "PERSON",
+        "start_char": 8636,
+        "end_char": 8642
+    },
+    {
+        "text": "U.S.",
+        "label": "GPE",
+        "start_char": 8644,
+        "end_char": 8648
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 8674,
+        "end_char": 8679
+    },
+    {
+        "text": "first",
+        "label": "ORDINAL",
+        "start_char": 8682,
+        "end_char": 8687
+    },
+    {
+        "text": "Polanco",
+        "label": "PERSON",
+        "start_char": 8883,
+        "end_char": 8890
+    },
+    {
+        "text": "Polanco",
+        "label": "PERSON",
+        "start_char": 8937,
+        "end_char": 8944
+    },
+    {
+        "text": "Colombia",
+        "label": "GPE",
+        "start_char": 8973,
+        "end_char": 8981
+    },
+    {
+        "text": "Ecuador",
+        "label": "GPE",
+        "start_char": 8983,
+        "end_char": 8990
+    },
+    {
+        "text": "Mexico",
+        "label": "GPE",
+        "start_char": 8995,
+        "end_char": 9001
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 9025,
+        "end_char": 9032
+    },
+    {
+        "text": "one",
+        "label": "CARDINAL",
+        "start_char": 9041,
+        "end_char": 9044
+    },
+    {
+        "text": "the United States",
+        "label": "GPE",
+        "start_char": 9052,
+        "end_char": 9069
+    },
+    {
+        "text": "Mexico",
+        "label": "GPE",
+        "start_char": 9082,
+        "end_char": 9088
+    },
+    {
+        "text": "Trump",
+        "label": "PERSON",
+        "start_char": 9154,
+        "end_char": 9159
+    },
+    {
+        "text": "22 years ago",
+        "label": "DATE",
+        "start_char": 9270,
+        "end_char": 9282
+    },
+    {
+        "text": "Michelle Bello",
+        "label": "PERSON",
+        "start_char": 9290,
+        "end_char": 9304
+    },
+    {
+        "text": "51",
+        "label": "DATE",
+        "start_char": 9306,
+        "end_char": 9308
+    },
+    {
+        "text": "four",
+        "label": "CARDINAL",
+        "start_char": 9343,
+        "end_char": 9347
+    },
+    {
+        "text": "Quintero",
+        "label": "PERSON",
+        "start_char": 9446,
+        "end_char": 9454
+    },
+    {
+        "text": "Cabimas",
+        "label": "GPE",
+        "start_char": 9613,
+        "end_char": 9620
+    },
+    {
+        "text": "Quintero",
+        "label": "PERSON",
+        "start_char": 9671,
+        "end_char": 9679
+    }
+]

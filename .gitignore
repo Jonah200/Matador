@@ -5,9 +5,9 @@ __pycache__/
 *.pyc
 .pytest_cache/
 logs/
-
 # Environment
 .env
+env/
 **/.env
 
 # Node
@@ -18,3 +18,6 @@ dist/
 .DS_Store
 .vscode/
 .idea
+
+# PNG files
+*.png
