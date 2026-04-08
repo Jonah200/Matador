@@ -1,5 +1,3 @@
-import spacy
-import pandas as pd
 from transformers import XLMRobertaTokenizer, XLMRobertaForSequenceClassification
 import torch
 from app.DTO.Article import Article

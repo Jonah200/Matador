@@ -1,8 +1,6 @@
 import torch
 import json
-from huggingface_hub import hf_hub_download
 import re
-# import emoji 
 from transformers import BertForSequenceClassification, BertTokenizer
 
 def preprocess_text(text):
@@ -25,7 +23,7 @@ def load_model_and_resources():
         raise RuntimeError(f"Error loading model/tokenizer: {str(e)}")
 
     try:
-        thresholds_file = "optimized_thresholds.json" # hf_hub_download(repo_id=repo_id, filename="optimized_thresholds.json")
+        thresholds_file = "app/services/emotion_detection/optimized_thresholds.json" # hf_hub_download(repo_id=repo_id, filename="optimized_thresholds.json")
         with open(thresholds_file, "r") as f:
             thresholds_data = json.load(f)
         if not (isinstance(thresholds_data, dict) and "emotion_labels" in thresholds_data and "thresholds" in thresholds_data):

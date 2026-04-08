@@ -15,3 +15,7 @@ httpx
 
 spacy
 pandas
+nltk
+bs4
+
+sentencepiece

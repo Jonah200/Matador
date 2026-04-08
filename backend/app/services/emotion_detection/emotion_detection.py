@@ -1,21 +1,11 @@
-import spacy
-import pandas as pd
-from collections import Counter
 import nltk
-from nltk.tokenize import sent_tokenize
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
-import os
-from huggingface_hub import hf_hub_download, login
 from importlib import import_module
-import json
-from ed_configs import WEIGHTS, EKMAN_EMOTIONS, EKMAN_MAPPING, NORM, ABBREVS
-from dotenv import load_dotenv
-from pydantic import BaseModel
-from typing import List, Dict, Union
+from app.services.emotion_detection.ed_configs import WEIGHTS, EKMAN_EMOTIONS, EKMAN_MAPPING, NORM, ABBREVS
 from app.DTO.Article import Article
 
+
 def detect_emotions(article: Article):
-    load_dotenv()
 
     text = "".join(para["text"] for para in article.paragraphs)
     nltk.download('punkt_tab')
@@ -33,7 +23,7 @@ def detect_emotions(article: Article):
     sents = tokenizer.tokenize(text)
     spans = list(tokenizer.span_tokenize(text))
 
-    inference_module = import_module("inference")
+    inference_module = import_module("app.services.emotion_detection.inference")
     predict_emotions = inference_module.predict_emotions
 
     
