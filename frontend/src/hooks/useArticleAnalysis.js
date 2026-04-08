@@ -78,6 +78,7 @@ function useArticleAnalysis() {
 
             es.onmessage = (event) => {
                 const data = JSON.parse(event.data);
+                console.log("SSE EVENT:", data);
                 const service = data.service_name;
                 const result = data.result || {};
 
