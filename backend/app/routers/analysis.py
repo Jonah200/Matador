@@ -17,7 +17,7 @@ async def analyze(article: Article, request: Request):
 
     event_bus: EventBus = request.app.state.event_bus
     job_store: JobStore = request.app.state.job_store
-    expected_services = ["ner_service", "textrank_service"]
+    expected_services = ["ner_service", "textrank_service", "ed_service", "cd_service", "isd_service"]
     await job_store.create_job(job_id=job_id,
                                article=article,
                                expected_services=expected_services) #TODO Change from hardcoded to dynamic expected_services
@@ -72,13 +72,11 @@ async def stream_job(job_id: str, request: Request):
                     if await request.is_disconnected():
                         break
                     continue
-                result = None
-                if event.get("status") == "completed":
-                    result = await job_store.get_result(job_id, event.get("service_name"))
-                elif event.get("status") == "failed":
-                    result = "failed" #TODO Handle this better
+                ret = {"service_name": event.get("service_name"), "status": event.get('status'), "result": None}
+                if ret['status'] == 'completed':
+                    ret['result'] = await job_store.get_result(job_id, ret['service_name'])
 
-                yield f"data: {json.dumps({"service_name": event.get("service_name"), "result": result})}\n\n"
+                yield f"data: {json.dumps(ret)}\n\n"
 
                 if event.get("service_name") == "job_complete":
                     break

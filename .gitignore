@@ -21,3 +21,11 @@ dist/
 
 # PNG files
 *.png
+
+# Models and datasets
+backend/ml/datasets
+backend/ml/artifacts/
+
+# Some Claude Code files for planning and experimenting with agentic coding
+CLAUDE.md
+KUBERNETES.md

@@ -29,7 +29,7 @@ async def main():
     await redis_client.ping()
     event_bus = RedisEventBus(redis_client)
     job_store = RedisJobStore(redis_client)
-    executor = ProcessPoolExecutor()
+    executor = ProcessPoolExecutor(max_workers=2)
 
     ner_service_worker_manager = ServiceWorkerManager(service_name="isd_service",
                                                       event_bus=event_bus,

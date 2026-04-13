@@ -2,6 +2,7 @@ import subprocess
 import signal
 import sys
 from typing import List
+import psutil
 from app.util.logging_config import setup_logging
 setup_logging()
 from loguru import logger
@@ -26,8 +27,15 @@ def start_services():
 def shutdown_services():
     logger.info("[SHUTDOWN] Stopping services...")
     for p in processes:
+        try:
+            parent = psutil.Process(p.pid)
+            children = parent.children(recursive=True)
+            for child in children:
+                child.terminate()
+        except psutil.NoSuchProcess:
+            pass
         p.terminate()
-    
+
     for p in processes:
         p.wait()
 

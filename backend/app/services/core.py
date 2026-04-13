@@ -104,7 +104,7 @@ class ServiceWorkerManager(ServiceWorkerManagerInterface):
                                     stream=True)
         
         except Exception as e:
-            logger.warning(f"[SERVICE WORKER MANAGER] ran into an exception {e} while processing a job: {job_id}")
+            logger.warning(f"[SERVICE WORKER MANAGER] ran into an exception: \"{e}\"\nWhile processing a job: {job_id}")
             await self.job_store.mark_failed(job_id, self.service_name)
             await self.event_bus.publish(f"job:{job_id}:services", 
                                    {
