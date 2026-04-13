@@ -6,6 +6,7 @@ import torch
 import torch.nn.functional as F
 from huggingface_hub import hf_hub_download
 from transformers import pipeline as hf_pipeline
+import spacy
 
 from app.DTO.Article import Article
 
@@ -15,11 +16,11 @@ MAX_LENGTH = 128
 # Module-level singletons — populated once on the first call to detect_claims
 _pipeline = None
 _temperature: float | None = None
-
+_nlp = None
 
 def _load_model() -> None:
     """Download the model and temperature scalar from HuggingFace (runs once)."""
-    global _pipeline, _temperature
+    global _pipeline, _temperature, _nlp
 
     device = 0 if torch.cuda.is_available() else -1
     _pipeline = hf_pipeline(
@@ -35,17 +36,19 @@ def _load_model() -> None:
     temp_path = hf_hub_download(repo_id=MODEL_REPO, filename="temperature.pt")
     meta = torch.load(temp_path, map_location="cpu", weights_only=True)
     _temperature = float(meta["temperature"])
+    _nlp = spacy.load("en_core_web_trf")
 
 
 def _split_sentences(article: Article) -> list[str]:
     """Extract sentences from article paragraphs, preserving paragraph structure."""
+    global _nlp
     sentences = []
     for para in article.paragraphs:
         text = str(para.get("text", "")).strip()
         if not text:
             continue
-        parts = re.split(r"(?<=[.!?])\s+", text)
-        sentences.extend(s.strip() for s in parts if s.strip())
+        processed = _nlp(text)
+        sentences.extend(s.text.strip() for s in processed.sents if s.text.strip())
     return sentences
 
 
@@ -87,7 +90,7 @@ def detect_claims(article: Article) -> dict:
             ]
         }
     """
-    global _pipeline, _temperature
+    global _pipeline, _temperature, _nlp
 
     if _pipeline is None:
         _load_model()
