@@ -1,6 +1,23 @@
 import SectionLabel from "./SectionLabel";
+import { formatPublishDate } from "../utils/analysisHelpers";
 
-function SummarySection({ domain, summaryText, copied, onCopy, lastUpdated }) {
+
+function SummarySection({
+    domain,
+    summaryText,
+    copied,
+    onCopy,
+    lastUpdated,
+    articleTitle,
+    authors = [],
+    publishDate,
+}) {
+    const normalizedAuthors = Array.isArray(authors)
+        ? authors.filter(Boolean)
+        : authors
+            ? [authors]
+            : [];
+
     return (
         <>
             {lastUpdated && (
@@ -17,6 +34,38 @@ function SummarySection({ domain, summaryText, copied, onCopy, lastUpdated }) {
                     </div>
                 </div>
             )}
+
+            <section className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+                <SectionLabel text="Article Details" />
+                <div className="space-y-3">
+                    <div>
+                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                            Title
+                        </div>
+                        <div className="text-[16px] font-bold text-slate-900 leading-snug">
+                            {articleTitle || "Untitled article"}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 text-[13px]">
+                        <div>
+                            <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                Authors
+                            </div>
+                            <div className="text-slate-700 leading-5">
+                                {normalizedAuthors.length > 0 ? normalizedAuthors.join(", ") : "Unknown"}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                                Publish date
+                            </div>
+                            <div className="text-slate-700 leading-5">{formatPublishDate(publishDate)}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <section className="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-l-blue-500">
                 <div className="flex justify-between items-start">

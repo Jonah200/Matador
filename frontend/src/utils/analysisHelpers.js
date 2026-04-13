@@ -66,13 +66,50 @@ export function getCountByType(highlights, type) {
 }
 
 export function getPresenceLabel(count) {
-    if (count >= 3) return "High";
+    if (count >= 5) return "High";
+    if (count >= 2) return "Moderate";
     if (count >= 1) return "Detected";
     return "None";
 }
 
 export function getPresencePillClass(presence) {
     if (presence === "High") return "bg-red-50 text-red-700";
+    if (presence === "Moderate") return "bg-orange-50 text-orange-700";
     if (presence === "Detected") return "bg-amber-50 text-amber-700";
     return "bg-emerald-50 text-emerald-700";
+}
+
+export function getBiasDescriptor(score, direction) {
+    const numeric = Number.isFinite(score) ? score : 0;
+    const abs = Math.abs(numeric);
+
+    if (abs < 0.35) return "Near center";
+    if (abs < 0.9) return `Slightly ${direction || (numeric < 0 ? "left" : "right")}`;
+    if (abs < 1.4) return `Moderately ${direction || (numeric < 0 ? "left" : "right")}`;
+    return `Strongly ${direction || (numeric < 0 ? "left" : "right")}`;
+}
+
+export function clampBiasScore(score) {
+    const numeric = Number.isFinite(score) ? score : 0;
+    return Math.max(-2, Math.min(2, numeric));
+}
+
+export function getBiasPositionPercent(score) {
+    const clamped = clampBiasScore(score);
+    return ((clamped + 2) / 4) * 100;
+}
+
+export function formatPublishDate(value) {
+    if (!value) return "Unknown";
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+        return value;
+    }
+
+    return parsed.toLocaleDateString([], {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
 }

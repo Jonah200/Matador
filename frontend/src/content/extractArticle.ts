@@ -9,14 +9,46 @@ export type ExtractedArticle = {
     length: number;
     siteName: string | null;
     extractedAt: string;
+    publishedAt: string | null;
 };
 
 function normalizeWhitespace(input: string): string {
     return input.replace(/\s+/g, " ").trim();
 }
 
+function getMetaContent(doc: Document, selectors: string[]): string | null {
+    for (const selector of selectors) {
+        const value = doc.querySelector(selector)?.getAttribute("content");
+        if (value && value.trim()) {
+            return value.trim();
+        }
+    }
+
+    return null;
+}
+
+function extractBylineFallback(doc: Document): string | null {
+    return getMetaContent(doc, [
+        'meta[name="author"]',
+        'meta[property="author"]',
+        'meta[property="article:author"]',
+        'meta[name="parsely-author"]',
+    ]);
+}
+
+function extractPublishedAt(doc: Document): string | null {
+    return getMetaContent(doc, [
+        'meta[property="article:published_time"]',
+        'meta[name="article:published_time"]',
+        'meta[name="parsely-pub-date"]',
+        'meta[name="pubdate"]',
+        'meta[name="publish-date"]',
+        'meta[name="date"]',
+        'meta[property="og:updated_time"]',
+    ]);
+}
+
 function preCleanForReadability(doc: Document): void {
-    // Trim obvious ad and embedded noise before handing the clone to Readability.
     const adJunkSelectors = [
         "aside[aria-label*='advert' i]",
         "[aria-label*='advertisement' i]",
@@ -52,7 +84,6 @@ function extractTextWithParagraphs(parsed: ReturnType<Readability["parse"]>): st
     }
 
     const htmlDoc = new DOMParser().parseFromString(contentHtml, "text/html");
-    // Prefer paragraph boundaries when they are available so previews stay readable.
     const paragraphs = Array.from(htmlDoc.querySelectorAll("p"))
         .map((p) => normalizeWhitespace(p.textContent ?? ""))
         .filter(Boolean);
@@ -66,13 +97,11 @@ function extractTextWithParagraphs(parsed: ReturnType<Readability["parse"]>): st
 
 export function extractArticleFromPage(doc: Document = document): ExtractedArticle | null {
     const safeDoc = document.implementation.createHTMLDocument(doc.title);
-
     safeDoc.body.innerHTML = doc.body.innerHTML;
 
     preCleanForReadability(safeDoc);
 
     const parsed = new Readability(safeDoc).parse();
-
     const text = extractTextWithParagraphs(parsed);
     const plainText = normalizeWhitespace(text);
 
@@ -82,17 +111,17 @@ export function extractArticleFromPage(doc: Document = document): ExtractedArtic
 
     const title = normalizeWhitespace(parsed?.title || doc.title || "Untitled");
     const excerptSource = normalizeWhitespace(parsed?.excerpt ?? "");
-
     const excerpt = excerptSource || (plainText.length > 280 ? `${plainText.slice(0, 280)}...` : plainText);
 
     return {
         title,
         url: doc.location?.href ?? "",
-        byline: parsed?.byline ?? null,
+        byline: parsed?.byline ?? extractBylineFallback(doc),
         excerpt,
         contentText: text,
         length: parsed?.length ?? text.length,
         siteName: parsed?.siteName ?? doc.location?.hostname ?? null,
         extractedAt: new Date().toISOString(),
+        publishedAt: extractPublishedAt(doc),
     };
 }

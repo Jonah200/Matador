@@ -5,37 +5,39 @@ function AnalysisGrid({
     emotionalPillClass,
     emotionalCount,
     emotionalSignals,
-    subjectivityPresence,
-    subjectivityPillClass,
-    subjectivityCount,
-    subjectivitySignals,
+    claimPresence,
+    claimPillClass,
+    claimCount,
+    claimSignals,
 }) {
     return (
         <div className="grid grid-cols-2 gap-3">
             <EvidenceCard
                 title="Emotional Language"
-                tooltipText="Flags emotionally charged framing such as loaded adjectives, intensifiers, moralized language, or catastrophic wording."
+                tooltipText="Flags passages with elevated emotional mass and their strongest detected emotional signals."
                 presenceLabel={emotionalPresence}
                 presencePillClass={emotionalPillClass}
-                countLabel={
+                mainValue={
                     emotionalCount === 0
                         ? "None detected"
-                        : `Detected in ${emotionalCount} passage${emotionalCount === 1 ? "" : "s"}`
+                        : `${emotionalCount} flagged passage${emotionalCount === 1 ? "" : "s"}`
                 }
+                subValue="Based on emotion-detection output across the article."
                 signals={emotionalSignals}
             />
 
             <EvidenceCard
-                title="Subjectivity"
-                tooltipText="Flags opinionated or interpretive phrasing (e.g., speculation, editorial language) rather than straightforward statements of fact."
-                presenceLabel={subjectivityPresence}
-                presencePillClass={subjectivityPillClass}
-                countLabel={
-                    subjectivityCount === 0
-                        ? "None detected"
-                        : `Detected in ${subjectivityCount} passage${subjectivityCount === 1 ? "" : "s"}`
+                title="Claims Detected"
+                tooltipText="Counts sentences classified as claims so the UI can separate assertions from background description or setup."
+                presenceLabel={claimPresence}
+                presencePillClass={claimPillClass}
+                mainValue={
+                    claimCount === 0
+                        ? "No claims"
+                        : `${claimCount} claim${claimCount === 1 ? "" : "s"}`
                 }
-                signals={subjectivitySignals}
+                subValue="Claim detection should ideally include sentence locations for jump-to-text support."
+                signals={claimSignals}
             />
         </div>
     );

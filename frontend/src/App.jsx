@@ -6,6 +6,7 @@ import SummarySection from "./components/SummarySection";
 import SubjectsSection from "./components/SubjectsSection";
 import AnalysisGrid from "./components/AnalysisGrid";
 import BiasHighlightsSection from "./components/BiasHighlightsSection";
+import BiasScaleCard from "./components/BiasScaleCard";
 
 import useArticleAnalysis from "./hooks/useArticleAnalysis";
 
@@ -14,8 +15,6 @@ import {
   getSubjects,
   getSubjectCounts,
   getFilteredHighlights,
-  getSignalsByType,
-  getCountByType,
   getPresenceLabel,
   getPresencePillClass,
 } from "./utils/analysisHelpers";
@@ -34,6 +33,9 @@ function App() {
     isAnalyzing,
     errorMsg,
     lastUpdated,
+    emotionStats,
+    claimStats,
+    biasSummary,
     handleAnalyze,
   } = useArticleAnalysis();
 
@@ -46,28 +48,8 @@ function App() {
     [highlights, activeSubject, sortMode]
   );
 
-  const emotionalSignals = useMemo(
-    () => getSignalsByType(highlights, "emotional"),
-    [highlights]
-  );
-
-  const subjectivitySignals = useMemo(
-    () => getSignalsByType(highlights, "subjective"),
-    [highlights]
-  );
-
-  const emotionalCount = useMemo(
-    () => getCountByType(highlights, "emotional"),
-    [highlights]
-  );
-
-  const subjectivityCount = useMemo(
-    () => getCountByType(highlights, "subjective"),
-    [highlights]
-  );
-
-  const emotionalPresence = getPresenceLabel(emotionalCount);
-  const subjectivityPresence = getPresenceLabel(subjectivityCount);
+  const emotionalPresence = getPresenceLabel(emotionStats.count);
+  const claimPresence = getPresenceLabel(claimStats.count);
 
   const totalHighlightCount = highlights.length;
   const shownHighlightCount = filteredHighlights.length;
@@ -100,6 +82,14 @@ function App() {
           copied={copied}
           onCopy={handleCopy}
           lastUpdated={lastUpdated}
+          articleTitle={article?.title || ""}
+          authors={article?.authors || (article?.byline ? [article.byline] : [])}
+          publishDate={article?.publishedAt || article?.publish_date || ""}
+        />
+
+        <BiasScaleCard
+          bias={biasSummary.score}
+          direction={biasSummary.direction}
         />
 
         <SubjectsSection
@@ -115,12 +105,12 @@ function App() {
         <AnalysisGrid
           emotionalPresence={emotionalPresence}
           emotionalPillClass={getPresencePillClass(emotionalPresence)}
-          emotionalCount={emotionalCount}
-          emotionalSignals={emotionalSignals}
-          subjectivityPresence={subjectivityPresence}
-          subjectivityPillClass={getPresencePillClass(subjectivityPresence)}
-          subjectivityCount={subjectivityCount}
-          subjectivitySignals={subjectivitySignals}
+          emotionalCount={emotionStats.count}
+          emotionalSignals={emotionStats.signals}
+          subjectivityPresence={claimPresence}
+          subjectivityPillClass={getPresencePillClass(claimPresence)}
+          subjectivityCount={claimStats.count}
+          subjectivitySignals={claimStats.signals}
         />
 
         <BiasHighlightsSection

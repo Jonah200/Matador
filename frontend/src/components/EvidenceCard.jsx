@@ -7,8 +7,10 @@ function EvidenceCard({
     presenceLabel,
     presencePillClass,
     countLabel,
-    signals,
+    signals = [],
 }) {
+    const safeSignals = Array.isArray(signals) ? signals : [];
+
     return (
         <div
             className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 min-h-[110px]"
@@ -39,13 +41,13 @@ function EvidenceCard({
                     Signals identified
                 </div>
 
-                {signals.length === 0 ? (
+                {safeSignals.length === 0 ? (
                     <div className="text-[12px] text-slate-600 leading-5">
                         No signals found in highlighted passages.
                     </div>
                 ) : (
                     <ul className="space-y-1">
-                        {signals.map((s) => (
+                        {safeSignals.map((s) => (
                             <li key={s} className="text-[12px] text-slate-700 flex gap-2 leading-5">
                                 <span className="text-slate-300">•</span>
                                 <span>{s}</span>
