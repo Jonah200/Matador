@@ -4,11 +4,46 @@ from importlib import import_module
 from app.services.emotion_detection.ed_configs import WEIGHTS, EKMAN_EMOTIONS, EKMAN_MAPPING, NORM, ABBREVS
 from app.DTO.Article import Article
 
+PUNKT_READY = False
+
+
+def ensure_punkt_tokenizer():
+    global PUNKT_READY
+
+    if PUNKT_READY:
+        return
+
+    try:
+        nltk.data.find("tokenizers/punkt")
+        PUNKT_READY = True
+        return
+    except LookupError:
+        pass
+
+    try:
+        nltk.data.find("tokenizers/punkt_tab")
+        PUNKT_READY = True
+        return
+    except LookupError:
+        pass
+
+    for resource in ("punkt", "punkt_tab"):
+        try:
+            nltk.download(resource, quiet=True)
+            PUNKT_READY = True
+            return
+        except Exception:
+            continue
+
+    raise RuntimeError(
+        "NLTK punkt tokenizer is unavailable. Install the punkt data locally for emotion detection."
+    )
+
 
 def detect_emotions(article: Article):
 
-    text = "".join(para["text"] for para in article.paragraphs)
-    nltk.download('punkt_tab', quiet=True)
+    text = " ".join(para["text"] for para in article.paragraphs)
+    ensure_punkt_tokenizer()
 
     flagged = []
     okay = []
@@ -29,6 +64,9 @@ def detect_emotions(article: Article):
     
     for index, sent in enumerate(sents):
         result, processed = predict_emotions(sent)
+
+        if not isinstance(result, dict):
+            result = {}
 
         mapped = {emotion: sum(value if EKMAN_MAPPING[key] == emotion else 0 for key, value in result.items()) for emotion in EKMAN_EMOTIONS}
         norm = {emotion : value * NORM[emotion] for emotion, value in mapped.items()}
@@ -62,6 +100,7 @@ def detect_emotions(article: Article):
 
     out['flagged'] = flagged
     out['okay'] = okay
+    out['total_mass'] = sum(item["mass"] for item in flagged + okay)
 
     return out
 

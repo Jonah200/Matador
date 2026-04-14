@@ -3,10 +3,12 @@ import "./App.css";
 
 import Header from "./components/Header";
 import SummarySection from "./components/SummarySection";
+import RelatedCoverageSection from "./components/RelatedCoverageSection";
 import SubjectsSection from "./components/SubjectsSection";
 import AnalysisGrid from "./components/AnalysisGrid";
 import BiasHighlightsSection from "./components/BiasHighlightsSection";
 import BiasScaleCard from "./components/BiasScaleCard";
+import { MATADOR_FOCUS_TEXT_REQUEST } from "./content/contentScript";
 
 import useArticleAnalysis from "./hooks/useArticleAnalysis";
 
@@ -36,6 +38,8 @@ function App() {
     emotionStats,
     claimStats,
     biasSummary,
+    nerContext,
+    serviceStatus,
     handleAnalyze,
   } = useArticleAnalysis();
 
@@ -61,8 +65,25 @@ function App() {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleJumpToHighlight = (h) => {
+  const handleJumpToHighlight = async (h) => {
     console.log("Jump requested:", h);
+
+    try {
+      const tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      const tabId = tabs[0]?.id;
+
+      if (!tabId) {
+        return;
+      }
+
+      await chrome.tabs.sendMessage(tabId, {
+        type: MATADOR_FOCUS_TEXT_REQUEST,
+        text: h.quote,
+        fallbackText: h.subject,
+      });
+    } catch (error) {
+      console.error("Jump failed", error);
+    }
   };
 
   return (
@@ -87,9 +108,15 @@ function App() {
           publishDate={article?.publishedAt || article?.publish_date || ""}
         />
 
+        <RelatedCoverageSection
+          keywords={nerContext.keywords}
+          stories={nerContext.stories}
+        />
+
         <BiasScaleCard
-          bias={biasSummary.score}
+          score={biasSummary.score}
           direction={biasSummary.direction}
+          unavailable={serviceStatus.isdFailed}
         />
 
         <SubjectsSection
@@ -107,10 +134,13 @@ function App() {
           emotionalPillClass={getPresencePillClass(emotionalPresence)}
           emotionalCount={emotionStats.count}
           emotionalSignals={emotionStats.signals}
-          subjectivityPresence={claimPresence}
-          subjectivityPillClass={getPresencePillClass(claimPresence)}
-          subjectivityCount={claimStats.count}
-          subjectivitySignals={claimStats.signals}
+          emotionalAnalyzedCount={emotionStats.analyzedCount}
+          emotionalTotalMass={emotionStats.totalMass}
+          emotionalProfile={emotionStats.profile}
+          claimPresence={claimPresence}
+          claimPillClass={getPresencePillClass(claimPresence)}
+          claimCount={claimStats.count}
+          claimSignals={claimStats.signals}
         />
 
         <BiasHighlightsSection

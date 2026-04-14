@@ -7,9 +7,12 @@ function EvidenceCard({
     presenceLabel,
     presencePillClass,
     countLabel,
+    subValue,
     signals = [],
+    chartItems = [],
 }) {
     const safeSignals = Array.isArray(signals) ? signals : [];
+    const safeChartItems = Array.isArray(chartItems) ? chartItems : [];
 
     return (
         <div
@@ -34,12 +37,34 @@ function EvidenceCard({
                 <div className="text-[28px] leading-8 font-black text-slate-900">
                     {countLabel}
                 </div>
+                {subValue ? (
+                    <div className="text-[12px] text-slate-600 mt-1">{subValue}</div>
+                ) : null}
             </div>
 
             <div className="mt-4">
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
                     Signals identified
                 </div>
+
+                {safeChartItems.length > 0 ? (
+                    <div className="mb-3 space-y-2">
+                        {safeChartItems.map((item) => (
+                            <div key={item.label}>
+                                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-slate-600">
+                                    <span>{item.label}</span>
+                                    <span>{item.percent}%</span>
+                                </div>
+                                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                                    <div
+                                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-300"
+                                        style={{ width: `${item.percent}%` }}
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : null}
 
                 {safeSignals.length === 0 ? (
                     <div className="text-[12px] text-slate-600 leading-5">

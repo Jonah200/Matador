@@ -82,7 +82,7 @@ def predict_emotions(text):
     predictions.sort(key=lambda x: x[1], reverse=True)
     
     # result = "\n".join([f"{emotion}: {confidence:.4f}" for emotion, confidence in predictions]) or "No emotions predicted."
-    result = {emotion: round(float(confidence), 4) for emotion, confidence in predictions} or "No emotions predicted"
+    result = {emotion: round(float(confidence), 4) for emotion, confidence in predictions}
     return result, processed_text
 
 if __name__ == "__main__":
