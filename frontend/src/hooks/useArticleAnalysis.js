@@ -203,16 +203,50 @@ function formatFailedServices(services) {
             if (service === "isd_service") return "ideological similarity";
             if (service === "cd_service") return "claim detection";
             if (service === "ner_service") return "named entity recognition";
+            if (service === "summarization_service") return "summary";
             if (service === "textrank_service") return "summary";
             return service;
         })
         .join(", ");
 }
 
+function getSummaryTextFromResult(result) {
+    if (typeof result === "string") {
+        return result;
+    }
+
+    if (typeof result?.summary === "string") {
+        return result.summary;
+    }
+
+    return "";
+}
+
 function normalizeRelatedStories(result) {
-    const topStories = Array.isArray(result?.articles?.topStories) ? result.articles.topStories : [];
-    const organic = Array.isArray(result?.articles?.organic) ? result.articles.organic : [];
-    const rawStories = topStories.length > 0 ? topStories : organic;
+    const articleContainer = result?.articles;
+    const topStories = Array.isArray(articleContainer?.topStories)
+        ? articleContainer.topStories
+        : [];
+    const organic = Array.isArray(articleContainer?.organic)
+        ? articleContainer.organic
+        : [];
+    const directArticles = Array.isArray(articleContainer) ? articleContainer : [];
+    const directTopStories = Array.isArray(result?.topStories) ? result.topStories : [];
+    const directOrganic = Array.isArray(result?.organic) ? result.organic : [];
+    const news = Array.isArray(result?.news) ? result.news : [];
+
+    const rawStories =
+        topStories.length > 0
+            ? topStories
+            : organic.length > 0
+                ? organic
+                : directArticles.length > 0
+                    ? directArticles
+                    : directTopStories.length > 0
+                        ? directTopStories
+                        : directOrganic.length > 0
+                            ? directOrganic
+                            : news;
 
     return rawStories.slice(0, 6).map((story, index) => ({
         id: story?.link || `story-${index}`,
@@ -220,9 +254,9 @@ function normalizeRelatedStories(result) {
         link: story?.link || "#",
         source: story?.source || "",
         date: story?.date || "",
-        imageUrl: story?.imageUrl || "",
-        snippet: story?.snippet || "",
-    }));
+        imageUrl: story?.imageUrl || story?.image || story?.image_url || "",
+        snippet: story?.snippet || story?.description || "",
+    })).filter((story) => story.link !== "#");
 }
 
 function rankEntity(entity) {
@@ -411,6 +445,11 @@ function useArticleAnalysis() {
                 if (status === "failed") {
                     console.error(`${service} failed`, data);
                     seenFailures.add(service);
+
+                    if (service === "summarization_service") {
+                        setSummaryText("Summary unavailable for this article.");
+                    }
+
                     if (service === "isd_service") {
                         setServiceStatus((prev) => ({ ...prev, isdFailed: true }));
                     }
@@ -422,12 +461,15 @@ function useArticleAnalysis() {
                     return;
                 }
 
-                if (
-                    ["textrank_service", "pagerank_service"].includes(service) &&
-                    result?.summary
-                ) {
+                const summaryText =
+                    service === "summarization_service" ||
+                    ["textrank_service", "pagerank_service"].includes(service)
+                        ? getSummaryTextFromResult(result)
+                        : "";
+
+                if (summaryText) {
                     console.log("Summary received");
-                    setSummaryText(result.summary);
+                    setSummaryText(summaryText);
                     return;
                 }
 
@@ -454,6 +496,7 @@ function useArticleAnalysis() {
                     console.group("NER processed");
                     console.log("entity count:", result.entities.length);
                     console.log("highlights:", entityHighlights);
+                    console.log("stories:", normalizeRelatedStories(result));
                     console.groupEnd();
 
                     setNerContext({
@@ -502,7 +545,7 @@ function useArticleAnalysis() {
                     const topSignals = pickTopSignals(signalSource);
                     const emotionProfile = buildEmotionProfile(signalSource);
 
-                    console.group("🔥 Emotion processed");
+                    console.group("Emotion processed");
                     console.log("flagged count:", flagged.length);
                     console.log("okay count:", okay.length);
                     console.log("used highlights:", emotionHighlights.length);
