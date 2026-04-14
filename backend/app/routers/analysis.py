@@ -37,13 +37,9 @@ async def stream_job(job_id: str, request: Request):
     Returns:
         StreamingResponse: On success initiates an SSE stream that will send service results as they become available.
         Each returned service result is a JSON object representing a ServiceResult object with the following fields:
-        service_scope: str: Either 'article' or 'paragraph'
-        service_name: str: Name of returning service, or 'job_complete' once all services completed
-        result_code: str: Either 'complete' or 'failed'
-        paragraph_index: int | None: For paragraph scoped services this is the index in the paragraphs array the result corresponds to, null for article scoped services
-        result: dict | None: Dictionary of results returned by the AnalysisService run function, or null if an error occurred
-        error: str | None: Error string if the service raised and Exception, or null if returned normally
-        completed_at: float: Time of completion of the service in the form of seconds.microseconds since Epoch
+        service_name: The name of the service returning the result, if this is the job completion message service_name = job_complete.
+        status: completed or failed
+        result: Result returned from the processing function. Null if service failed and for job_complete.
     """
     event_bus: EventBus = request.app.state.event_bus
     job_store: JobStore = request.app.state.job_store
