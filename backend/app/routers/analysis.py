@@ -17,7 +17,7 @@ async def analyze(article: Article, request: Request):
 
     event_bus: EventBus = request.app.state.event_bus
     job_store: JobStore = request.app.state.job_store
-    expected_services = ["ner_service", "textrank_service", "ed_service", "cd_service", "isd_service"]
+    expected_services = ["ner_service", "summarization_service", "ed_service", "cd_service", "isd_service"]
     await job_store.create_job(job_id=job_id,
                                article=article,
                                expected_services=expected_services) #TODO Change from hardcoded to dynamic expected_services

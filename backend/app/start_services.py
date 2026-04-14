@@ -10,10 +10,11 @@ from loguru import logger
 SERVICES = [
     [sys.executable, "-m", "app.services.cleanup.main"],
     [sys.executable, "-m", "app.services.ner.main"],
-    [sys.executable, "-m", "app.services.textrank.main"],
+    # [sys.executable, "-m", "app.services.textrank.main"],
     [sys.executable, "-m", "app.services.isd.main"],
     [sys.executable, "-m", "app.services.emotion_detection.main"],
-    [sys.executable, "-m", "app.services.claim_detection.main"]
+    [sys.executable, "-m", "app.services.claim_detection.main"],
+    [sys.executable, "-m", "app.services.summarization.main"]
 ]
 
 processes: List[subprocess.Popen] = []

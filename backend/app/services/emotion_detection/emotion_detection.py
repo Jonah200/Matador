@@ -8,7 +8,7 @@ from app.DTO.Article import Article
 def detect_emotions(article: Article):
 
     text = "".join(para["text"] for para in article.paragraphs)
-    nltk.download('punkt_tab')
+    nltk.download('punkt_tab', quiet=True)
 
     flagged = []
     okay = []
@@ -29,8 +29,6 @@ def detect_emotions(article: Article):
     
     for index, sent in enumerate(sents):
         result, processed = predict_emotions(sent)
-        print(sent)
-        print(type(result))
 
         mapped = {emotion: sum(value if EKMAN_MAPPING[key] == emotion else 0 for key, value in result.items()) for emotion in EKMAN_EMOTIONS}
         norm = {emotion : value * NORM[emotion] for emotion, value in mapped.items()}
