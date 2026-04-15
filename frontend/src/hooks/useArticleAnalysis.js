@@ -203,17 +203,13 @@ function formatFailedServices(services) {
             if (service === "isd_service") return "ideological similarity";
             if (service === "cd_service") return "claim detection";
             if (service === "ner_service") return "named entity recognition";
-<<<<<<< HEAD
             if (service === "summarization_service") return "summary";
-=======
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
             if (service === "textrank_service") return "summary";
             return service;
         })
         .join(", ");
 }
 
-<<<<<<< HEAD
 function getSummaryTextFromResult(result) {
     if (typeof result === "string") {
         return result;
@@ -251,12 +247,6 @@ function normalizeRelatedStories(result) {
                         : directOrganic.length > 0
                             ? directOrganic
                             : news;
-=======
-function normalizeRelatedStories(result) {
-    const topStories = Array.isArray(result?.articles?.topStories) ? result.articles.topStories : [];
-    const organic = Array.isArray(result?.articles?.organic) ? result.articles.organic : [];
-    const rawStories = topStories.length > 0 ? topStories : organic;
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
 
     return rawStories.slice(0, 6).map((story, index) => ({
         id: story?.link || `story-${index}`,
@@ -264,15 +254,9 @@ function normalizeRelatedStories(result) {
         link: story?.link || "#",
         source: story?.source || "",
         date: story?.date || "",
-<<<<<<< HEAD
         imageUrl: story?.imageUrl || story?.image || story?.image_url || "",
         snippet: story?.snippet || story?.description || "",
     })).filter((story) => story.link !== "#");
-=======
-        imageUrl: story?.imageUrl || "",
-        snippet: story?.snippet || "",
-    }));
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
 }
 
 function rankEntity(entity) {
@@ -461,14 +445,11 @@ function useArticleAnalysis() {
                 if (status === "failed") {
                     console.error(`${service} failed`, data);
                     seenFailures.add(service);
-<<<<<<< HEAD
 
                     if (service === "summarization_service") {
                         setSummaryText("Summary unavailable for this article.");
                     }
 
-=======
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
                     if (service === "isd_service") {
                         setServiceStatus((prev) => ({ ...prev, isdFailed: true }));
                     }
@@ -480,7 +461,6 @@ function useArticleAnalysis() {
                     return;
                 }
 
-<<<<<<< HEAD
                 const summaryText =
                     service === "summarization_service" ||
                     ["textrank_service", "pagerank_service"].includes(service)
@@ -490,14 +470,6 @@ function useArticleAnalysis() {
                 if (summaryText) {
                     console.log("Summary received");
                     setSummaryText(summaryText);
-=======
-                if (
-                    ["textrank_service", "pagerank_service"].includes(service) &&
-                    result?.summary
-                ) {
-                    console.log("Summary received");
-                    setSummaryText(result.summary);
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
                     return;
                 }
 
@@ -572,11 +544,7 @@ function useArticleAnalysis() {
                     const topSignals = pickTopSignals(signalSource);
                     const emotionProfile = buildEmotionProfile(signalSource);
 
-<<<<<<< HEAD
                     console.group("Emotion processed");
-=======
-                    console.group("🔥 Emotion processed");
->>>>>>> fca85d2 (Added coverage UI  and rework the logic for services to work in the frontend)
                     console.log("flagged count:", flagged.length);
                     console.log("okay count:", okay.length);
                     console.log("used highlights:", emotionHighlights.length);
