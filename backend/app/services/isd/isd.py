@@ -2,9 +2,13 @@ from app.DTO.Article import Article
 import joblib
 from app.services.isd.preprocessing import preprocess
 from pathlib import Path
+from importlib import import_module
+import sys
 
 
 def is_detection(article: Article):
+    sys.modules.setdefault("preprocessing", import_module("app.services.isd.preprocessing"))
+
     model_path = Path(__file__).with_name("ridge_model.pkl")
     model = joblib.load(model_path)
     text = " ".join(par["text"] for par in article.paragraphs)
