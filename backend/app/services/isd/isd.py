@@ -1,16 +1,19 @@
 from app.DTO.Article import Article
 import joblib
 from app.services.isd.preprocessing import preprocess
+from pathlib import Path
 from importlib import import_module
+import sys
 
 
 def is_detection(article: Article):
-    # preprocess = import_module("app.services.isd.preprocessing.preprocess")
-    model = joblib.load('app/services/isd/ridge_model.pkl')
-    text = " ".join([par['text'] for par in article.paragraphs])
+    sys.modules.setdefault("preprocessing", import_module("app.services.isd.preprocessing"))
 
-    preprocessed_text = preprocess(text)
-    bias = model.predict(preprocessed_text)[0]
+    model_path = Path(__file__).with_name("ridge_model.pkl")
+    model = joblib.load(model_path)
+    text = " ".join(par["text"] for par in article.paragraphs)
+    processed_text = preprocess([text])[0]
+    bias = model.predict([processed_text])[0]
 
     direction = 'right' if bias > 0 else 'left'
     if bias == 0:
@@ -22,4 +25,3 @@ def is_detection(article: Article):
     }
 
     return output
-

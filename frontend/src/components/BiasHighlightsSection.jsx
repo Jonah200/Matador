@@ -1,5 +1,6 @@
 import SectionLabel from "./SectionLabel";
 import HighlightCard from "./HighlightCard";
+import { formatSubjectLabel } from "../utils/analysisHelpers";
 
 function BiasHighlightsSection({
     showBias,
@@ -16,14 +17,17 @@ function BiasHighlightsSection({
         <section className="bg-white rounded-2xl p-0 shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-4 flex items-center justify-between gap-3">
                 <div>
-                    <SectionLabel text="Bias Highlights" />
+                    <SectionLabel text="Analysis Highlights" />
                     <div className="text-[12px] text-slate-600">
                         Showing <span className="font-semibold">{shownHighlightCount}</span> of{" "}
                         <span className="font-semibold">{totalHighlightCount}</span>
                         {activeSubject !== "ALL" ? (
                             <>
                                 {" "}
-                                (filtered by <span className="font-semibold">{activeSubject}</span>)
+                                (filtered by{" "}
+                                <span className="font-semibold">
+                                    {formatSubjectLabel(activeSubject)}
+                                </span>)
                             </>
                         ) : null}
                     </div>

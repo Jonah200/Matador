@@ -3,11 +3,13 @@ import "./App.css";
 
 import Header from "./components/Header";
 import SummarySection from "./components/SummarySection";
+import RelatedCoverageSection from "./components/RelatedCoverageSection";
 import SubjectsSection from "./components/SubjectsSection";
 import AnalysisGrid from "./components/AnalysisGrid";
 import BiasHighlightsSection from "./components/BiasHighlightsSection";
+import BiasScaleCard from "./components/BiasScaleCard";
+import { MATADOR_FOCUS_TEXT_REQUEST } from "./content/contentScript";
 
-import useChromeTabUrl from "./hooks/useChromeTabUrl";
 import useArticleAnalysis from "./hooks/useArticleAnalysis";
 
 import {
@@ -15,15 +17,11 @@ import {
   getSubjects,
   getSubjectCounts,
   getFilteredHighlights,
-  getSignalsByType,
-  getCountByType,
   getPresenceLabel,
   getPresencePillClass,
 } from "./utils/analysisHelpers";
 
 function App() {
-  const url = useChromeTabUrl();
-
   const [copied, setCopied] = useState(false);
   const [showBias, setShowBias] = useState(true);
   const [activeSubject, setActiveSubject] = useState("ALL");
@@ -31,15 +29,21 @@ function App() {
   const [showAllSubjects, setShowAllSubjects] = useState(false);
 
   const {
+    article,
     highlights,
     summaryText,
     isAnalyzing,
     errorMsg,
     lastUpdated,
+    emotionStats,
+    claimStats,
+    biasSummary,
+    nerContext,
+    serviceStatus,
     handleAnalyze,
-  } = useArticleAnalysis(url);
+  } = useArticleAnalysis();
 
-  const domain = useMemo(() => getDomain(url), [url]);
+  const domain = useMemo(() => getDomain(article?.url || ""), [article]);
   const subjects = useMemo(() => getSubjects(highlights), [highlights]);
   const subjectCounts = useMemo(() => getSubjectCounts(highlights), [highlights]);
 
@@ -48,28 +52,8 @@ function App() {
     [highlights, activeSubject, sortMode]
   );
 
-  const emotionalSignals = useMemo(
-    () => getSignalsByType(highlights, "emotional"),
-    [highlights]
-  );
-
-  const subjectivitySignals = useMemo(
-    () => getSignalsByType(highlights, "subjective"),
-    [highlights]
-  );
-
-  const emotionalCount = useMemo(
-    () => getCountByType(highlights, "emotional"),
-    [highlights]
-  );
-
-  const subjectivityCount = useMemo(
-    () => getCountByType(highlights, "subjective"),
-    [highlights]
-  );
-
-  const emotionalPresence = getPresenceLabel(emotionalCount);
-  const subjectivityPresence = getPresenceLabel(subjectivityCount);
+  const emotionalPresence = getPresenceLabel(emotionStats.count);
+  const claimPresence = getPresenceLabel(claimStats.count);
 
   const totalHighlightCount = highlights.length;
   const shownHighlightCount = filteredHighlights.length;
@@ -81,8 +65,25 @@ function App() {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleJumpToHighlight = (h) => {
+  const handleJumpToHighlight = async (h) => {
     console.log("Jump requested:", h);
+
+    try {
+      const tabs = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      const tabId = tabs[0]?.id;
+
+      if (!tabId) {
+        return;
+      }
+
+      await chrome.tabs.sendMessage(tabId, {
+        type: MATADOR_FOCUS_TEXT_REQUEST,
+        text: h.quote,
+        fallbackText: h.subject,
+      });
+    } catch (error) {
+      console.error("Jump failed", error);
+    }
   };
 
   return (
@@ -102,6 +103,36 @@ function App() {
           copied={copied}
           onCopy={handleCopy}
           lastUpdated={lastUpdated}
+          articleTitle={article?.title || ""}
+          authors={article?.authors || (article?.byline ? [article.byline] : [])}
+          publishDate={article?.publishedAt || article?.publish_date || ""}
+        />
+
+        <RelatedCoverageSection
+          keywords={nerContext.keywords}
+          stories={nerContext.stories}
+          currentUrl={article?.url || ""}
+        />
+
+        <BiasScaleCard
+          score={biasSummary.score}
+          direction={biasSummary.direction}
+          unavailable={serviceStatus.isdFailed}
+        />
+
+        <AnalysisGrid
+          emotionalPresence={emotionalPresence}
+          emotionalPillClass={getPresencePillClass(emotionalPresence)}
+          emotionalCount={emotionStats.count}
+          emotionalSignals={emotionStats.signals}
+          emotionalAnalyzedCount={emotionStats.analyzedCount}
+          emotionalTotalMass={emotionStats.totalMass}
+          emotionalProfile={emotionStats.profile}
+          claimPresence={claimPresence}
+          claimPillClass={getPresencePillClass(claimPresence)}
+          claimCount={claimStats.count}
+          claimSignals={claimStats.signals}
+          claimAverageScore={claimStats.averageScore}
         />
 
         <SubjectsSection
@@ -112,17 +143,6 @@ function App() {
           setActiveSubject={setActiveSubject}
           showAllSubjects={showAllSubjects}
           setShowAllSubjects={setShowAllSubjects}
-        />
-
-        <AnalysisGrid
-          emotionalPresence={emotionalPresence}
-          emotionalPillClass={getPresencePillClass(emotionalPresence)}
-          emotionalCount={emotionalCount}
-          emotionalSignals={emotionalSignals}
-          subjectivityPresence={subjectivityPresence}
-          subjectivityPillClass={getPresencePillClass(subjectivityPresence)}
-          subjectivityCount={subjectivityCount}
-          subjectivitySignals={subjectivitySignals}
         />
 
         <BiasHighlightsSection

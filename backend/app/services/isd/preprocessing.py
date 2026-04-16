@@ -3,7 +3,7 @@ import re
 from nltk.corpus import stopwords
 
 def clean(text):
-    text = BeautifulSoup(text, "lxml").text
+    text = BeautifulSoup(text, "html.parser").text
     text = re.sub(r'\|\|\|', r' ', text)
     text = text.replace('„','').replace('“','')
     text = text.replace('"','').replace("'", '')

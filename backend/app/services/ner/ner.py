@@ -1,5 +1,4 @@
 import spacy
-import pandas as pd
 from app.util import serper_request
 from collections import Counter
 
@@ -7,7 +6,7 @@ from app.DTO.Article import Article
 
 def process_ner(article: Article):
 
-    text = "".join(para["text"] for para in article.paragraphs)
+    text = " ".join(para["text"] for para in article.paragraphs)
     nlp = spacy.load("en_core_web_trf")
     entities = []
 
@@ -21,14 +20,20 @@ def process_ner(article: Article):
         })
 
     ents = [ent['text'] for ent in entities]
-    counts = Counter(ents).most_common(5)
+    counts = Counter(ents).most_common(10)
     keywords = [count[0] for count in counts]
-    
-    articles = serper_request.get_articles(keywords)
+
+    headline = article.headline or ""
+
+    try:
+        articles = serper_request.get_articles(article.url, headline, keywords) if (headline or keywords) else {}
+    except Exception:
+        articles = {}
 
     output = {
         'entities' : entities,
-        'articles' : articles
+        'articles' : articles,
+        'keywords' : keywords
     }
     
     return output

@@ -7,8 +7,13 @@ function EvidenceCard({
     presenceLabel,
     presencePillClass,
     countLabel,
-    signals,
+    subValue,
+    signals = [],
+    chartItems = [],
 }) {
+    const safeSignals = Array.isArray(signals) ? signals : [];
+    const safeChartItems = Array.isArray(chartItems) ? chartItems : [];
+
     return (
         <div
             className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 min-h-[110px]"
@@ -32,28 +37,56 @@ function EvidenceCard({
                 <div className="text-[28px] leading-8 font-black text-slate-900">
                     {countLabel}
                 </div>
+                {subValue ? (
+                    <div className="text-[12px] text-slate-600 mt-1">{subValue}</div>
+                ) : null}
             </div>
 
-            <div className="mt-4">
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                    Signals identified
-                </div>
-
-                {signals.length === 0 ? (
-                    <div className="text-[12px] text-slate-600 leading-5">
-                        No signals found in highlighted passages.
+            {safeChartItems.length > 0 ? (
+                <div className="mt-4">
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                        Signal mix
                     </div>
-                ) : (
-                    <ul className="space-y-1">
-                        {signals.map((s) => (
-                            <li key={s} className="text-[12px] text-slate-700 flex gap-2 leading-5">
-                                <span className="text-slate-300">•</span>
-                                <span>{s}</span>
-                            </li>
+                    <div className="mb-3 space-y-2">
+                        {safeChartItems.map((item) => (
+                            <div key={item.label}>
+                                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold text-slate-600">
+                                    <span>{item.label}</span>
+                                    <span>{item.percent}%</span>
+                                </div>
+                                <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                                    <div
+                                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-blue-300"
+                                        style={{ width: `${item.percent}%` }}
+                                    />
+                                </div>
+                            </div>
                         ))}
-                    </ul>
-                )}
-            </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="mt-4">
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                        Signals identified
+                    </div>
+                    {safeSignals.length === 0 ? (
+                        <div className="text-[12px] text-slate-600 leading-5">
+                            No signals found in highlighted passages.
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-2">
+                            {safeSignals.map((s) => (
+                                <span
+                                    key={s}
+                                    className="rounded-full bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-700 ring-1 ring-slate-200"
+                                >
+                                    {s}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }
