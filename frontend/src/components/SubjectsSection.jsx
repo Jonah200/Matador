@@ -1,4 +1,5 @@
 import SectionLabel from "./SectionLabel";
+import { formatSubjectLabel } from "../utils/analysisHelpers";
 
 function SubjectsSection({
     highlights,
@@ -17,8 +18,10 @@ function SubjectsSection({
         <section className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
             <div className="flex items-end justify-between">
                 <div>
-                    <SectionLabel text="Subjects Identified" />
-                    <div className="text-[12px] text-slate-600">Filter highlights by subject:</div>
+                    <SectionLabel text="Highlight Filters" />
+                    <div className="text-[12px] text-slate-600">
+                        Filter by the signal type found in highlights.
+                    </div>
                 </div>
             </div>
 
@@ -35,7 +38,7 @@ function SubjectsSection({
                     ].join(" ")}
                     aria-pressed={activeSubject === "ALL"}
                 >
-                    Show all <span className="ml-1 opacity-80">{highlights.length}</span>
+                    All highlights <span className="ml-1 opacity-80">{highlights.length}</span>
                 </button>
 
                 {visibleSubjects.map((tag) => {
@@ -57,7 +60,7 @@ function SubjectsSection({
                             ].join(" ")}
                             aria-pressed={activeSubject === tag}
                         >
-                            {tag} <span className="ml-1 opacity-80">{count}</span>
+                            {formatSubjectLabel(tag)} <span className="ml-1 opacity-80">{count}</span>
                         </button>
                     );
                 })}

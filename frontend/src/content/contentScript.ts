@@ -34,10 +34,11 @@ type RuntimeLike = {
     onMessage: {
         addListener: (
             cb: (
-                
                 message: unknown,
                 sender: unknown,
-                sendResponse: (response: ExtractResponseMessage) => void
+                sendResponse: (
+                    response: ExtractResponseMessage | { ok: boolean; error?: string }
+                ) => void
             ) => void
         ) => void;
     };
@@ -62,7 +63,41 @@ function isFocusTextRequest(message: unknown): message is FocusTextRequestMessag
 }
 
 function normalizeSearchText(value: string) {
-    return value.replace(/\s+/g, " ").trim().toLowerCase();
+    return value
+        .normalize("NFKD")
+        .replace(/[\u2018\u2019]/g, "'")
+        .replace(/[\u201C\u201D]/g, '"')
+        .replace(/[^a-zA-Z0-9]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
+}
+
+function getSearchFragments(target: string) {
+    const fragments = [target];
+    const words = target.split(" ").filter(Boolean);
+
+    for (const wordCount of [18, 12, 8, 5]) {
+        if (words.length >= wordCount) {
+            fragments.push(words.slice(0, wordCount).join(" "));
+        }
+    }
+
+    return [...new Set(fragments)].filter((fragment) => fragment.length >= 12);
+}
+
+function matchesSearchTarget(candidateText: string, target: string) {
+    const normalized = normalizeSearchText(candidateText);
+
+    if (!normalized) {
+        return false;
+    }
+
+    if (normalized.includes(target) || (normalized.length >= 24 && target.includes(normalized))) {
+        return true;
+    }
+
+    return getSearchFragments(target).some((fragment) => normalized.includes(fragment));
 }
 
 function findTextNodeMatch(searchText: string) {
@@ -71,18 +106,29 @@ function findTextNodeMatch(searchText: string) {
         return null;
     }
 
+    const elementSelectors = [
+        "article p",
+        "article li",
+        "article blockquote",
+        "main p",
+        "main li",
+        "main blockquote",
+        "p",
+        "li",
+        "blockquote",
+    ].join(",");
+
+    for (const element of Array.from(document.querySelectorAll(elementSelectors))) {
+        if (matchesSearchTarget(element.textContent || "", target)) {
+            return element;
+        }
+    }
+
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
 
     while (walker.nextNode()) {
         const node = walker.currentNode;
-        const rawText = node.textContent || "";
-        const normalized = normalizeSearchText(rawText);
-
-        if (!normalized) {
-            continue;
-        }
-
-        if (normalized.includes(target) || target.includes(normalized.slice(0, 80))) {
+        if (matchesSearchTarget(node.textContent || "", target)) {
             return node.parentElement || node.parentNode;
         }
     }

@@ -12,12 +12,13 @@ function AnalysisGrid({
     claimPillClass,
     claimCount,
     claimSignals,
+    claimAverageScore,
 }) {
     return (
         <div className="grid grid-cols-2 gap-3">
             <EvidenceCard
                 title="Emotional Language"
-                tooltipText="Flags passages with elevated emotional mass and their strongest detected emotional signals."
+                tooltipText="Shows where the wording feels emotionally loaded, so readers can spot passages that may be trying to intensify a reaction."
                 presenceLabel={emotionalPresence}
                 presencePillClass={emotionalPillClass}
                 countLabel={
@@ -38,7 +39,7 @@ function AnalysisGrid({
 
             <EvidenceCard
                 title="Claims Detected"
-                tooltipText="Counts sentences classified as claims so the UI can separate assertions from background description or setup."
+                tooltipText="Counts sentences the model reads as claims or checkworthy statements, so assertions stand apart from background context."
                 presenceLabel={claimPresence}
                 presencePillClass={claimPillClass}
                 countLabel={
@@ -46,7 +47,11 @@ function AnalysisGrid({
                         ? "No claims"
                         : `${claimCount} claim${claimCount === 1 ? "" : "s"}`
                 }
-                subValue="Claim detection should ideally include sentence locations for jump-to-text support."
+                subValue={
+                    claimCount === 0 || !Number.isFinite(claimAverageScore)
+                        ? "Model-scored claim sentences across the article."
+                        : `Average model confidence: ${Math.round(claimAverageScore * 100)}%`
+                }
                 signals={claimSignals}
             />
         </div>

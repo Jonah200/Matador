@@ -23,8 +23,10 @@ def process_ner(article: Article):
     counts = Counter(ents).most_common(10)
     keywords = [count[0] for count in counts]
 
+    headline = article.headline or ""
+
     try:
-        articles = serper_request.get_articles(keywords) if keywords else {}
+        articles = serper_request.get_articles(article.url, headline, keywords) if (headline or keywords) else {}
     except Exception:
         articles = {}
 

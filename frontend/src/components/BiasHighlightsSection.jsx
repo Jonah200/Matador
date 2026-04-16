@@ -1,5 +1,6 @@
 import SectionLabel from "./SectionLabel";
 import HighlightCard from "./HighlightCard";
+import { formatSubjectLabel } from "../utils/analysisHelpers";
 
 function BiasHighlightsSection({
     showBias,
@@ -23,7 +24,10 @@ function BiasHighlightsSection({
                         {activeSubject !== "ALL" ? (
                             <>
                                 {" "}
-                                (filtered by <span className="font-semibold">{activeSubject}</span>)
+                                (filtered by{" "}
+                                <span className="font-semibold">
+                                    {formatSubjectLabel(activeSubject)}
+                                </span>)
                             </>
                         ) : null}
                     </div>

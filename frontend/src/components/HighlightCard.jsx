@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { formatSubjectLabel } from "../utils/analysisHelpers";
 
 function HighlightCard({ h, onJump }) {
     const [open, setOpen] = useState(false);
 
     return (
-        <div className="rounded-2xl bg-slate-950 text-white p-4 shadow-xl">
+        <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4 shadow-sm">
             <div className="flex items-start justify-between gap-3">
-                <p className="text-xs italic text-slate-200 font-serif leading-relaxed">
+                <p className="text-xs italic text-slate-800 font-serif leading-relaxed">
                     “{h.quote}”
                 </p>
 
@@ -14,7 +15,7 @@ function HighlightCard({ h, onJump }) {
                     <button
                         type="button"
                         onClick={() => onJump?.(h)}
-                        className="shrink-0 rounded-lg px-2 py-1 text-[12px] text-slate-200 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                        className="shrink-0 rounded-lg px-2 py-1 text-[12px] font-semibold text-blue-700 hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-blue-50"
                         aria-label="Jump to this passage in the article"
                     >
                         Jump
@@ -23,7 +24,7 @@ function HighlightCard({ h, onJump }) {
                     <button
                         type="button"
                         onClick={() => setOpen((v) => !v)}
-                        className="shrink-0 rounded-lg px-2 py-1 text-[12px] text-slate-200 hover:bg-white/10 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-slate-950"
+                        className="shrink-0 rounded-lg px-2 py-1 text-[12px] font-semibold text-blue-700 hover:bg-blue-100 transition focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-blue-50"
                         aria-expanded={open}
                         aria-controls={`explain-${h.id}`}
                     >
@@ -38,23 +39,23 @@ function HighlightCard({ h, onJump }) {
             </div>
 
             <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-red-600/15 text-red-200 px-2 py-1 text-[11px] font-semibold">
+                <span className="rounded-full bg-rose-100 text-rose-700 px-2 py-1 text-[11px] font-semibold">
                     ISSUE: {h.issue}
                 </span>
 
-                <span className="rounded-full bg-white/10 text-slate-200 px-2 py-1 text-[11px] font-semibold">
+                <span className="rounded-full bg-white text-blue-700 ring-1 ring-blue-100 px-2 py-1 text-[11px] font-semibold">
                     Confidence: {h.confidence}
                 </span>
 
                 {h.subject ? (
-                    <span className="rounded-full bg-white/10 text-slate-200 px-2 py-1 text-[11px]">
-                        Subject: {h.subject}
+                    <span className="rounded-full bg-white text-slate-600 ring-1 ring-slate-200 px-2 py-1 text-[11px]">
+                        {formatSubjectLabel(h.subject)}
                     </span>
                 ) : null}
             </div>
 
             {open ? (
-                <div id={`explain-${h.id}`} className="mt-3 text-[12px] leading-5 text-slate-200">
+                <div id={`explain-${h.id}`} className="mt-3 text-[12px] leading-5 text-slate-700">
                     {h.explanation}
                 </div>
             ) : null}

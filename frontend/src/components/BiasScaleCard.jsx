@@ -1,6 +1,11 @@
 import SectionLabel from "./SectionLabel";
 import InfoTooltip from "./InfoTooltip";
-import { clampBiasScore, getBiasDescriptor, getBiasPositionPercent } from "../utils/analysisHelpers";
+import {
+    clampBiasScore,
+    formatBiasPercent,
+    getBiasDescriptor,
+    getBiasPositionPercent,
+} from "../utils/analysisHelpers";
 
 function BiasScaleCard({
     score = 0,
@@ -11,13 +16,14 @@ function BiasScaleCard({
     const clamped = clampBiasScore(score);
     const pointerLeft = getBiasPositionPercent(clamped);
     const descriptor = getBiasDescriptor(clamped, direction === "center" ? "" : direction);
+    const percentLabel = formatBiasPercent(clamped, direction);
 
     return (
         <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 min-h-[140px]">
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center min-w-0">
                     <SectionLabel text="Ideological Bias Scale" />
-                    <InfoTooltip text="Article-level ideological leaning returned by ISD on a scale from -2 (left) to +2 (right)." />
+                    <InfoTooltip text="Estimates whether the article’s framing leans left, right, or stays near the center, shown here as distance from the middle." />
                 </div>
                 <span
                     className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md whitespace-nowrap ${unavailable
@@ -32,7 +38,7 @@ function BiasScaleCard({
             <div className="mt-1 flex items-end justify-between gap-3">
                 <div>
                     <div className="text-[26px] leading-8 font-black text-slate-900">
-                        {unavailable ? "N/A" : <>{clamped > 0 ? "+" : ""}{clamped.toFixed(2)}</>}
+                        {unavailable ? "N/A" : percentLabel}
                     </div>
                     <div className="text-[12px] text-slate-600 mt-1">
                         {unavailable ? "ISD service did not return a score for this article." : sourceLabel}
@@ -52,9 +58,9 @@ function BiasScaleCard({
                     ) : null}
                 </div>
                 <div className="mt-2 flex justify-between text-[11px] text-slate-500 font-semibold">
-                    <span>Left (-2)</span>
-                    <span>Center (0)</span>
-                    <span>Right (+2)</span>
+                    <span>100% left</span>
+                    <span>Center</span>
+                    <span>100% right</span>
                 </div>
             </div>
         </div>

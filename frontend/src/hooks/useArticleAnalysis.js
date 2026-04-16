@@ -106,6 +106,12 @@ function getConfidenceFromScore(score) {
     return "Low";
 }
 
+function formatScorePercent(score) {
+    const numeric = Number(score || 0);
+    const clamped = Math.max(0, Math.min(1, numeric));
+    return `${Math.round(clamped * 100)}%`;
+}
+
 function pickTopSignals(flaggedItems) {
     const counts = {};
 
@@ -188,12 +194,6 @@ function normalizeClaimSentences(result) {
     });
 }
 
-function hasClaimLocations(claims) {
-    return claims.some(
-        (item) => typeof item?.start === "number" || typeof item?.end === "number"
-    );
-}
-
 function formatFailedServices(services) {
     if (services.length === 0) return "";
 
@@ -230,33 +230,86 @@ function normalizeRelatedStories(result) {
     const organic = Array.isArray(articleContainer?.organic)
         ? articleContainer.organic
         : [];
+    const nestedNews = Array.isArray(articleContainer?.news)
+        ? articleContainer.news
+        : [];
     const directArticles = Array.isArray(articleContainer) ? articleContainer : [];
     const directTopStories = Array.isArray(result?.topStories) ? result.topStories : [];
     const directOrganic = Array.isArray(result?.organic) ? result.organic : [];
     const news = Array.isArray(result?.news) ? result.news : [];
 
-    const rawStories =
-        topStories.length > 0
-            ? topStories
-            : organic.length > 0
-                ? organic
-                : directArticles.length > 0
-                    ? directArticles
-                    : directTopStories.length > 0
-                        ? directTopStories
-                        : directOrganic.length > 0
-                            ? directOrganic
-                            : news;
+    const rawStories = [
+        ...nestedNews,
+        ...news,
+        ...topStories,
+        ...organic,
+        ...directArticles,
+        ...directTopStories,
+        ...directOrganic,
+    ];
 
-    return rawStories.slice(0, 6).map((story, index) => ({
-        id: story?.link || `story-${index}`,
-        title: story?.title || "Untitled story",
-        link: story?.link || "#",
-        source: story?.source || "",
-        date: story?.date || "",
-        imageUrl: story?.imageUrl || story?.image || story?.image_url || "",
-        snippet: story?.snippet || story?.description || "",
-    })).filter((story) => story.link !== "#");
+    const seenLinks = new Set();
+    const seenSources = new Set();
+
+    const normalizedStories = rawStories
+        .map((story, index) => ({
+            id: story?.link || story?.url || `story-${index}`,
+            title: story?.title || "Untitled story",
+            link: story?.link || story?.url || "#",
+            source:
+                story?.source?.name ||
+                story?.source ||
+                story?.publisher ||
+                story?.siteName ||
+                "",
+            date:
+                story?.date ||
+                story?.publishedDate ||
+                story?.published_at ||
+                story?.datePublished ||
+                "",
+            imageUrl: story?.imageUrl || story?.image || story?.image_url || "",
+            snippet: story?.snippet || story?.description || "",
+        }))
+        .filter((story) => {
+            if (story.link === "#" || seenLinks.has(story.link)) {
+                return false;
+            }
+
+            seenLinks.add(story.link);
+            return true;
+        });
+
+    const diverseStories = [];
+
+    for (const story of normalizedStories) {
+        const sourceKey = String(story.source || "").trim().toLowerCase();
+        if (!sourceKey || !seenSources.has(sourceKey)) {
+            diverseStories.push(story);
+            if (sourceKey) {
+                seenSources.add(sourceKey);
+            }
+        }
+
+        if (diverseStories.length >= 6) {
+            break;
+        }
+    }
+
+    if (diverseStories.length < 6) {
+        for (const story of normalizedStories) {
+            if (diverseStories.some((item) => item.link === story.link)) {
+                continue;
+            }
+
+            diverseStories.push(story);
+            if (diverseStories.length >= 6) {
+                break;
+            }
+        }
+    }
+
+    return diverseStories;
 }
 
 function rankEntity(entity) {
@@ -285,20 +338,6 @@ function normalizeKeywords(result) {
     return [...new Set(merged)].slice(0, 8);
 }
 
-function normalizeEntityHighlights(entities) {
-    return entities
-        .filter((entity) => !LOW_SIGNAL_ENTITY_LABELS.has(entity?.label))
-        .sort((a, b) => {
-            const rankDiff = rankEntity(a) - rankEntity(b);
-            if (rankDiff !== 0) {
-                return rankDiff;
-            }
-
-            return (a?.start_char ?? 0) - (b?.start_char ?? 0);
-        })
-        .slice(0, 10);
-}
-
 function useArticleAnalysis() {
     const [analysisResults, setAnalysisResults] = useState([]);
     const [highlights, setHighlights] = useState([]);
@@ -319,7 +358,7 @@ function useArticleAnalysis() {
         totalMass: 0,
         profile: [],
     });
-    const [claimStats, setClaimStats] = useState({ count: 0, signals: [] });
+    const [claimStats, setClaimStats] = useState({ count: 0, signals: [], averageScore: null });
     const [biasSummary, setBiasSummary] = useState({
         score: 0,
         direction: "center",
@@ -337,7 +376,7 @@ function useArticleAnalysis() {
         setAnalysisResults([]);
         setSummaryText("Extracting article...");
         setEmotionStats({ count: 0, signals: [], analyzedCount: 0, totalMass: 0, profile: [] });
-        setClaimStats({ count: 0, signals: [] });
+        setClaimStats({ count: 0, signals: [], averageScore: null });
         setBiasSummary({ score: 0, direction: "center" });
         setNerContext({ keywords: [], stories: [] });
         setServiceStatus({ isdFailed: false });
@@ -364,7 +403,7 @@ function useArticleAnalysis() {
                 paragraphs,
             };
 
-            console.group("🟦 Matador Analyze Request");
+            console.group("Matador Analyze Request");
             console.log("payload:", payload);
             console.groupEnd();
 
@@ -380,7 +419,7 @@ function useArticleAnalysis() {
 
             const { job_id } = await res.json();
 
-            console.group("🟦 Matador Job Created");
+            console.group("Matador Job Created");
             console.log("job_id:", job_id);
             console.groupEnd();
 
@@ -479,33 +518,13 @@ function useArticleAnalysis() {
                         return;
                     }
 
-                    const displayEntities = normalizeEntityHighlights(result.entities);
-
-                    const entityHighlights = displayEntities.map((ent, i) => ({
-                        id: `ent-${i}-${ent?.text || "entity"}-${ent?.start_char ?? i}`,
-                        subject: ent?.text || "Entity",
-                        issue: "Named Entity",
-                        confidence: "High",
-                        quote: ent?.text || "",
-                        explanation: `Detected ${ent?.label || "entity"} mention in the article.`,
-                        type: "entity",
-                        order: ent?.start_char ?? i,
-                        signals: [ent?.label].filter(Boolean),
-                    }));
-
                     console.group("NER processed");
                     console.log("entity count:", result.entities.length);
-                    console.log("highlights:", entityHighlights);
                     console.groupEnd();
 
                     setNerContext({
                         keywords: normalizeKeywords(result),
                         stories: normalizeRelatedStories(result),
-                    });
-
-                    setHighlights((prev) => {
-                        const withoutEntities = prev.filter((item) => item.type !== "entity");
-                        return [...withoutEntities, ...entityHighlights];
                     });
 
                     return;
@@ -574,18 +593,32 @@ function useArticleAnalysis() {
                         (item) => item?.label === "checkworthy" || item?.label === "claim"
                     );
 
-                    const claimHighlights = onlyClaims.map((item, i) => ({
-                        id: item?.id || `claim-${i}`,
-                        subject: "Claim",
-                        issue: "Claim Detected",
-                        confidence: getConfidenceFromScore(item?.score || 0),
-                        quote: item?.text || "",
-                        explanation:
-                            "This sentence was classified as a claim by the claim detection model.",
-                        type: "claim",
-                        order: item?.start ?? i,
-                        signals: [item?.label === "claim" ? "claim sentence" : "checkworthy sentence"],
-                    }));
+                    const claimHighlights = onlyClaims.map((item, i) => {
+                        const modelScore = Number(item?.score || 0);
+                        const scorePercent = formatScorePercent(modelScore);
+                        const modelLabel = item?.label === "claim" ? "claim" : "checkworthy";
+
+                        return {
+                            id: item?.id || `claim-${i}`,
+                            subject: "Claims",
+                            issue: "Claim Detected",
+                            confidence: scorePercent,
+                            confidenceScore: modelScore,
+                            quote: item?.text || "",
+                            explanation: `The claim detection model scored this sentence ${scorePercent} likely to be ${modelLabel}.`,
+                            type: "claim",
+                            order: item?.start ?? i,
+                            signals: [`${modelLabel} sentence`],
+                        };
+                    });
+
+                    const averageScore =
+                        onlyClaims.length > 0
+                            ? onlyClaims.reduce(
+                                (sum, item) => sum + Number(item?.score || 0),
+                                0
+                            ) / onlyClaims.length
+                            : null;
 
                     console.group("Claim processed");
                     console.log("sentence count:", sentences.length);
@@ -595,16 +628,12 @@ function useArticleAnalysis() {
 
                     setClaimStats({
                         count: onlyClaims.length,
+                        averageScore,
                         signals:
                             onlyClaims.length > 0
-                                ? [
-                                    onlyClaims.some((item) => item?.label === "claim")
-                                        ? "claim sentence"
-                                        : "checkworthy sentence",
-                                    hasClaimLocations(onlyClaims)
-                                        ? "locations available"
-                                        : "locations missing",
-                                ]
+                                ? [onlyClaims.some((item) => item?.label === "claim")
+                                    ? "claim sentence"
+                                    : "checkworthy sentence"]
                                 : [],
                     });
 

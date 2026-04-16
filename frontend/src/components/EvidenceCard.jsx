@@ -42,12 +42,11 @@ function EvidenceCard({
                 ) : null}
             </div>
 
-            <div className="mt-4">
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                    Signals identified
-                </div>
-
-                {safeChartItems.length > 0 ? (
+            {safeChartItems.length > 0 ? (
+                <div className="mt-4">
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                        Signal mix
+                    </div>
                     <div className="mb-3 space-y-2">
                         {safeChartItems.map((item) => (
                             <div key={item.label}>
@@ -64,23 +63,30 @@ function EvidenceCard({
                             </div>
                         ))}
                     </div>
-                ) : null}
-
-                {safeSignals.length === 0 ? (
-                    <div className="text-[12px] text-slate-600 leading-5">
-                        No signals found in highlighted passages.
+                </div>
+            ) : (
+                <div className="mt-4">
+                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
+                        Signals identified
                     </div>
-                ) : (
-                    <ul className="space-y-1">
-                        {safeSignals.map((s) => (
-                            <li key={s} className="text-[12px] text-slate-700 flex gap-2 leading-5">
-                                <span className="text-slate-300">•</span>
-                                <span>{s}</span>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
+                    {safeSignals.length === 0 ? (
+                        <div className="text-[12px] text-slate-600 leading-5">
+                            No signals found in highlighted passages.
+                        </div>
+                    ) : (
+                        <div className="flex flex-wrap gap-2">
+                            {safeSignals.map((s) => (
+                                <span
+                                    key={s}
+                                    className="rounded-full bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-700 ring-1 ring-slate-200"
+                                >
+                                    {s}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

@@ -111,22 +111,13 @@ function App() {
         <RelatedCoverageSection
           keywords={nerContext.keywords}
           stories={nerContext.stories}
+          currentUrl={article?.url || ""}
         />
 
         <BiasScaleCard
           score={biasSummary.score}
           direction={biasSummary.direction}
           unavailable={serviceStatus.isdFailed}
-        />
-
-        <SubjectsSection
-          highlights={highlights}
-          subjects={subjects}
-          subjectCounts={subjectCounts}
-          activeSubject={activeSubject}
-          setActiveSubject={setActiveSubject}
-          showAllSubjects={showAllSubjects}
-          setShowAllSubjects={setShowAllSubjects}
         />
 
         <AnalysisGrid
@@ -141,6 +132,17 @@ function App() {
           claimPillClass={getPresencePillClass(claimPresence)}
           claimCount={claimStats.count}
           claimSignals={claimStats.signals}
+          claimAverageScore={claimStats.averageScore}
+        />
+
+        <SubjectsSection
+          highlights={highlights}
+          subjects={subjects}
+          subjectCounts={subjectCounts}
+          activeSubject={activeSubject}
+          setActiveSubject={setActiveSubject}
+          showAllSubjects={showAllSubjects}
+          setShowAllSubjects={setShowAllSubjects}
         />
 
         <BiasHighlightsSection
